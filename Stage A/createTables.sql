@@ -22,9 +22,15 @@ CREATE TABLE MENU_ITEM (
   price DECIMAL(10, 2) NOT NULL,
   description TEXT,
   is_available BOOLEAN NOT NULL DEFAULT TRUE,
+  added_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  calories INT,
   category_id INT NOT NULL,
   -- CONSTRAINT: Price must be positive (a dish cannot be free or negative)
   CONSTRAINT check_price_positive CHECK (price > 0),
+  -- CONSTRAINT: Ensuring the item isn't added in the future (logical check)
+  CONSTRAINT check_added_date CHECK (added_date <= CURRENT_DATE),
+  -- Constraint: Calories cannot be negative
+  CONSTRAINT check_calories_positive CHECK (calories >= 0),
   CONSTRAINT fk_category 
     FOREIGN KEY (category_id) 
     REFERENCES MENU_CATEGORY(category_id) 

@@ -1,0 +1,501 @@
+ingredient_id,ingredient_name,unit
+1,Flavouring Vanilla Artificial 1,pieces
+2,Sage Ground Wiberg 2,pieces
+3,Scallops - U - 10 3,grams
+4,Muffin Batt - Blueberry Passion 4,ml
+5,Oil - Coconut 5,liters
+6,Gatorade - Xfactor Berry 6,liters
+7,"Thyme - Lemon, Fresh 7",ml
+8,Carbonated Water - Blackberry 8,grams
+9,Mousse - Passion Fruit 9,grams
+10,Water - Green Tea Refresher 10,kg
+11,Buffalo - Striploin 11,liters
+12,Red Cod Fillets - 225g 12,grams
+13,Foam Dinner Plate 13,liters
+14,Pepper - Red Bell 14,kg
+15,Mushroom - King Eryingii 15,pieces
+16,Glaze - Apricot 16,liters
+17,Cinnamon - Ground 17,ml
+18,Carbonated Water - Strawberry 18,grams
+19,Bread - Corn Muffaleta Onion 19,liters
+20,Soupcontfoam16oz 116con 20,pieces
+21,"Roe - Lump Fish, Black 21",pieces
+22,"Rum - Cream, Amarula 22",oz
+23,Calypso - Strawberry Lemonade 23,liters
+24,Oil - Shortening - All - Purpose 24,oz
+25,Apples - Sliced / Wedge 25,pieces
+26,"Salmon - Smoked, Sliced 26",kg
+27,Wiberg Cure 27,kg
+28,"Pasta - Linguini, Dry 28",pieces
+29,Lobster - Tail 6 Oz 29,pieces
+30,Table Cloth 62x114 Colour 30,pieces
+31,Vinegar - Sherry 31,grams
+32,Soup Knorr Chili With Beans 32,oz
+33,Orange Roughy 6/8 Oz 33,grams
+34,Oats Large Flake 34,pieces
+35,Honey - Liquid 35,grams
+36,Cape Capensis - Fillet 36,ml
+37,Yeast Dry - Fermipan 37,pieces
+38,Honey - Liquid 38,pieces
+39,"Asparagus - Green, Fresh 39",ml
+40,Ham - Black Forest 40,ml
+41,"Artichokes - Knobless, White 41",grams
+42,"Cheese - Cheddar, Mild 42",pieces
+43,"Mushroom - Chanterelle, Dry 43",kg
+44,Hummus - Spread 44,pieces
+45,Grapes - Black 45,ml
+46,Beef - Eye Of Round 46,ml
+47,Cassis 47,ml
+48,Chicken - Livers 48,oz
+49,"Lettuce - Romaine, Heart 49",kg
+50,Table Cloth 62x120 Colour 50,ml
+51,"Wine - Magnotta, White 51",pieces
+52,"Octopus - Baby, Cleaned 52",kg
+53,"Wine - Mas Chicet Rose, Vintage 53",grams
+54,Truffle - Whole Black Peeled 54,oz
+55,Beef - Tenderloin 55,liters
+56,Mushroom - Chanterelle Frozen 56,grams
+57,"Squash - Pattypan, Yellow 57",ml
+58,Bar Bran Honey Nut 58,pieces
+59,"Pepper - Black, Ground 59",kg
+60,Blueberries 60,oz
+61,"Soup - Knorr, Veg / Beef 61",oz
+62,Onions - Red 62,pieces
+63,Ecolab - Solid Fusion 63,kg
+64,Honey - Comb 64,liters
+65,Turkey Leg With Drum And Thigh 65,grams
+66,Cranberry Foccacia 66,grams
+67,Wine - Fino Tio Pepe Gonzalez 67,oz
+68,Wine - Sauvignon Blanc Oyster 68,ml
+69,Corn Kernels - Frozen 69,oz
+70,Potato - Sweet 70,pieces
+71,Silicone Parch. 16.3x24.3 71,ml
+72,Dragon Fruit 72,grams
+73,Oranges 73,ml
+74,Currants 74,ml
+75,Broom - Angled 75,oz
+76,Milk - Skim 76,liters
+77,"Cake Circle, Paprus 77",liters
+78,Turnip - Mini 78,liters
+79,Paper Towel Touchless 79,liters
+80,Squash - Guords 80,ml
+81,Coffee - Almond Amaretto 81,kg
+82,Butter - Pod 82,kg
+83,Chef Hat 20cm 83,ml
+84,Rabbit - Whole 84,kg
+85,Mushroom - Chanterelle Frozen 85,pieces
+86,Chinese Foods - Plain Fried Rice 86,ml
+87,Soup - Campbells - Chicken Noodle 87,ml
+88,Bread - Crusty Italian Poly 88,kg
+89,Veal - Bones 89,ml
+90,Water - Green Tea Refresher 90,kg
+91,Beef - Ground Lean Fresh 91,liters
+92,Olives - Morracan Dired 92,pieces
+93,Oxtail - Cut 93,pieces
+94,Bread - Italian Sesame Poly 94,pieces
+95,Fondant - Icing 95,ml
+96,"Water - Spring Water, 355 Ml 96",oz
+97,Pastry - Choclate Baked 97,ml
+98,Soup - Campbells Beef Noodle 98,oz
+99,Wine - Taylors Reserve 99,liters
+100,"Beets - Candy Cane, Organic 100",grams
+101,Pectin 101,ml
+102,"Beans - Navy, Dry 102",pieces
+103,Chocolate - Feathers 103,grams
+104,Sprouts Dikon 104,kg
+105,Flour - Semolina 105,oz
+106,Cream Of Tartar 106,liters
+107,Sloe Gin - Mcguinness 107,grams
+108,Juice Peach Nectar 108,oz
+109,Muffin Mix - Morning Glory 109,grams
+110,Flavouring - Raspberry 110,liters
+111,Spinach - Spinach Leaf 111,ml
+112,Wine - Touraine Azay - Le - Rideau 112,liters
+113,Coffee - Ristretto Coffee Capsule 113,ml
+114,Energy Drink Bawls 114,grams
+115,Flour - Strong Pizza 115,grams
+116,Ginger - Fresh 116,ml
+117,Bagel - Sesame Seed Presliced 117,kg
+118,"Rum - Dark, Bacardi, Black 118",ml
+119,The Pop Shoppe - Cream Soda 119,pieces
+120,Cinnamon Rolls 120,oz
+121,"Bread - Roll, Soft White Round 121",kg
+122,Cheese - Bocconcini 122,ml
+123,Veal Inside - Provimi 123,pieces
+124,Mustard Prepared 124,oz
+125,Trueblue - Blueberry 125,grams
+126,Garbag Bags - Black 126,oz
+127,Island Oasis - Pina Colada 127,liters
+128,Magnotta - Bel Paese White 128,oz
+129,Vodka - Moskovskaya 129,liters
+130,Wine - Alsace Riesling Reserve 130,liters
+131,Creamers - 10% 131,oz
+132,Beef Striploin Aaa 132,oz
+133,"Pasta - Cappellini, Dry 133",ml
+134,Bread - Dark Rye 134,kg
+135,Longos - Chicken Cordon Bleu 135,oz
+136,Bananas 136,oz
+137,Squash - Butternut 137,liters
+138,Spaghetti Squash 138,oz
+139,Cheese - Augre Des Champs 139,kg
+140,Squid - Breaded 140,oz
+141,Chicken - Ground 141,pieces
+142,Beef - Top Sirloin 142,ml
+143,Pepper - Chili Powder 143,grams
+144,Bag - Clear 7 Lb 144,oz
+145,Cheese - Augre Des Champs 145,pieces
+146,"Bread - Bagels, Mini 146",kg
+147,Cinnamon Rolls 147,grams
+148,"Soup - Knorr, French Onion 148",pieces
+149,Rice - Sushi 149,oz
+150,"Wine - Red, Pinot Noir, Chateau 150",grams
+151,Carbonated Water - Raspberry 151,liters
+152,"Pork - Ham, Virginia 152",kg
+153,"Cheese - Boursin, Garlic / Herbs 153",oz
+154,Bamboo Shoots - Sliced 154,oz
+155,"Gin - Gilbeys London, Dry 155",kg
+156,Pork - Ground 156,ml
+157,"Wine - White, Ej 157",pieces
+158,Pineapple - Golden 158,kg
+159,Huck White Towels 159,ml
+160,Table Cloth 53x69 White 160,grams
+161,Soup Campbells Mexicali Tortilla 161,oz
+162,Latex Rubber Gloves Size 9 162,ml
+163,Soup - Base Broth Chix 163,grams
+164,Bagel - 12 Grain Preslice 164,ml
+165,Butcher Twine 4r 165,liters
+166,Southern Comfort 166,liters
+167,Bread - Mini Hamburger Bun 167,ml
+168,Sugar - Crumb 168,pieces
+169,Salmon - Canned 169,pieces
+170,"Mushroom - Oyster, Fresh 170",ml
+171,Wine - Alicanca Vinho Verde 171,oz
+172,Wine - Cava Aria Estate Brut 172,oz
+173,Flower - Potmums 173,liters
+174,Persimmons 174,oz
+175,"Wine - Red, Metus Rose 175",kg
+176,Vinegar - White Wine 176,liters
+177,Juice - Orangina 177,liters
+178,"Mustard - Dry, Powder 178",liters
+179,Onions - Red 179,pieces
+180,Wine - Jaboulet Cotes Du Rhone 180,pieces
+181,Pie Box - Cello Window 2.5 181,grams
+182,"Salmon - Smoked, Sliced 182",ml
+183,Ice Cream Bar - Hageen Daz To 183,pieces
+184,Smirnoff Green Apple Twist 184,kg
+185,Dill Weed - Dry 185,kg
+186,Flavouring - Raspberry 186,grams
+187,Bacardi Breezer - Tropical 187,oz
+188,Muffin Hinge 117n 188,grams
+189,Garlic Powder 189,grams
+190,Bacardi Breezer - Strawberry 190,ml
+191,"Tortillas - Flour, 10 191",grams
+192,V8 Pet 192,ml
+193,"Sauce - Soya, Light 193",kg
+194,Muffin Mix - Banana Nut 194,pieces
+195,"Juice - Cranberry, 341 Ml 195",ml
+196,Hersey Shakes 196,ml
+197,Pasta - Cheese / Spinach Bauletti 197,pieces
+198,Parsley - Fresh 198,kg
+199,Food Colouring - Green 199,liters
+200,Myers Planters Punch 200,oz
+201,Table Cloth 90x90 Colour 201,pieces
+202,Lamb Rack Frenched Australian 202,pieces
+203,Appetiser - Bought 203,pieces
+204,Broom - Push 204,oz
+205,"Soup - Campbells, Chix Gumbo 205",liters
+206,Filter - Coffee 206,pieces
+207,Salt And Pepper Mix - White 207,pieces
+208,"Pork - Loin, Bone - In 208",liters
+209,Cranberries - Frozen 209,ml
+210,Cassis 210,pieces
+211,Turkey Leg With Drum And Thigh 211,ml
+212,"Beer - Alexander Kieths, Pale Ale 212",oz
+213,Pail With Metal Handle 16l White 213,ml
+214,Ecolab Digiclean Mild Fm 214,ml
+215,"Wine - Cahors Ac 2000, Clos 215",grams
+216,Potatoes - Yukon Gold 5 Oz 216,oz
+217,"Wine - Red, Lurton Merlot De 217",grams
+218,Cake - Mini Cheesecake 218,kg
+219,"Cheese - Cheddar, Medium 219",oz
+220,Fudge - Cream Fudge 220,kg
+221,"Split Peas - Yellow, Dry 221",ml
+222,Pork Loin Bine - In Frenched 222,ml
+223,Wine - Beringer Founders Estate 223,liters
+224,"Doilies - 8, Paper 224",pieces
+225,Wine - Pinot Noir Mondavi Coastal 225,ml
+226,Bread - French Baquette 226,ml
+227,Vodka - Moskovskaya 227,pieces
+228,Food Colouring - Blue 228,pieces
+229,Snapple Lemon Tea 229,oz
+230,Cookie Chocolate Chip With 230,liters
+231,Bagel - Everything 231,grams
+232,Tilapia - Fillets 232,ml
+233,Cheese - Pied De Vents 233,kg
+234,Scallops - U - 10 234,oz
+235,Carbonated Water - Peach 235,oz
+236,Eggplant - Baby 236,pieces
+237,Sprite - 355 Ml 237,grams
+238,Baking Powder 238,liters
+239,Sesame Seed Black 239,ml
+240,Wine - Ej Gallo Sierra Valley 240,grams
+241,Cheese - Mix 241,oz
+242,Pea - Snow 242,oz
+243,Cinnamon - Ground 243,oz
+244,Bread Base - Goodhearth 244,kg
+245,Cheese - Gorgonzola 245,oz
+246,Catfish - Fillets 246,oz
+247,Pie Pecan 247,grams
+248,Milk - Condensed 248,liters
+249,"Coke - Diet, 355 Ml 249",oz
+250,Rambutan 250,grams
+251,Olive - Spread Tapenade 251,kg
+252,Lamb - Whole Head Off 252,liters
+253,Puree - Kiwi 253,grams
+254,Beef - Tender Tips 254,liters
+255,Compound - Mocha 255,ml
+256,Nantucket Pine Orangebanana 256,kg
+257,Pepper - Scotch Bonnet 257,oz
+258,Appetizer - Chicken Satay 258,pieces
+259,Bacardi Breezer - Tropical 259,pieces
+260,"Wine - Red, Black Opal Shiraz 260",ml
+261,"Sauce - Gravy, Au Jus, Mix 261",kg
+262,Flour Dark Rye 262,ml
+263,Olive - Spread Tapenade 263,liters
+264,"Turkey - Breast, Boneless Sk On 264",ml
+265,Water - Green Tea Refresher 265,liters
+266,Mayonnaise 266,grams
+267,"Gingerale - Schweppes, 355 Ml 267",kg
+268,Flour - Semolina 268,liters
+269,Sauce - Alfredo 269,pieces
+270,Bar Energy Chocchip 270,liters
+271,Broom And Brush Rack Black 271,grams
+272,Pears - Fiorelle 272,pieces
+273,Wine - Dubouef Macon - Villages 273,oz
+274,Bread - Granary Small Pull 274,ml
+275,Cabbage - Savoy 275,ml
+276,"Marjoram - Dried, Rubbed 276",grams
+277,Alize Sunset 277,liters
+278,Cheese - Cream Cheese 278,grams
+279,Vegetable - Base 279,kg
+280,Coffee - Almond Amaretto 280,kg
+281,Mix - Cocktail Ice Cream 281,kg
+282,Soup - Campbellschix Stew 282,oz
+283,Flower - Leather Leaf Fern 283,pieces
+284,Beets - Golden 284,liters
+285,Creme De Menthe Green 285,liters
+286,Tuna - Loin 286,kg
+287,Haggis 287,oz
+288,Tea - Earl Grey 288,liters
+289,Dill Weed - Dry 289,oz
+290,Gloves - Goldtouch Disposable 290,grams
+291,Anisette - Mcguiness 291,kg
+292,Liquid Aminios Acid - Braggs 292,pieces
+293,"Cheese - Cheddar, Mild 293",oz
+294,Lamb Tenderloin Nz Fr 294,ml
+295,Octopus 295,oz
+296,Pork - Side Ribs 296,pieces
+297,Capicola - Hot 297,oz
+298,Bread - Pumpernickel 298,grams
+299,"Doilies - 8, Paper 299",ml
+300,Bar Mix - Lime 300,grams
+301,Crawfish 301,kg
+302,Chicken - Bones 302,oz
+303,Chips Potato Swt Chilli Sour 303,kg
+304,Ice Cream Bar - Oreo Sandwich 304,ml
+305,"Doilies - 12, Paper 305",kg
+306,Buffalo - Tenderloin 306,ml
+307,Paste - Black Olive 307,liters
+308,Calypso - Lemonade 308,ml
+309,"Beef - Cooked, Corned 309",liters
+310,Salt And Pepper Mix - White 310,pieces
+311,Cup - Paper 10oz 92959 311,kg
+312,Ham Black Forest 312,pieces
+313,Rabbit - Legs 313,pieces
+314,Cardamon Ground 314,liters
+315,Sprouts - Baby Pea Tendrils 315,kg
+316,Pasta - Agnolotti - Butternut 316,kg
+317,Salmon Atl.whole 8 - 10 Lb 317,ml
+318,"Nut - Pistachio, Shelled 318",oz
+319,Corn Meal 319,pieces
+320,Taro Leaves 320,grams
+321,Yukon Jack 321,pieces
+322,"Yogurt - Peach, 175 Gr 322",ml
+323,"Beef - Bones, Cut - Up 323",liters
+324,"Olives - Black, Pitted 324",pieces
+325,"Juice - Grapefruit, 341 Ml 325",pieces
+326,Sambuca - Ramazzotti 326,oz
+327,Everfresh Products 327,kg
+328,Coffee Beans - Chocolate 328,kg
+329,Calvados - Boulard 329,grams
+330,Pastry - Choclate Baked 330,oz
+331,Appetizer - Chicken Satay 331,kg
+332,Tomato - Green 332,kg
+333,"Chicken - Leg, Fresh 333",kg
+334,"Juice - Orange, Concentrate 334",kg
+335,Uniform Linen Charge 335,ml
+336,Bagel - Plain 336,grams
+337,Wine - Cotes Du Rhone Parallele 337,pieces
+338,Potatoes - Parissienne 338,grams
+339,Ham - Cooked 339,liters
+340,"Syrup - Monin, Amaretta 340",kg
+341,Cookies - Amaretto 341,oz
+342,Wasabi Paste 342,kg
+343,Snails - Large Canned 343,kg
+344,Veal - Bones 344,pieces
+345,"Tart Shells - Sweet, 3 345",ml
+346,Cod - Black Whole Fillet 346,pieces
+347,Cranberries - Fresh 347,pieces
+348,Spice - Chili Powder Mexican 348,pieces
+349,Cocoa Powder - Dutched 349,liters
+350,Buffalo - Tenderloin 350,grams
+351,Appetizer - Crab And Brie 351,liters
+352,Watercress 352,kg
+353,Rappini - Andy Boy 353,grams
+354,Guava 354,kg
+355,Avocado 355,ml
+356,Vaccum Bag 10x13 356,oz
+357,Shiratamako - Rice Flour 357,kg
+358,Gherkin - Sour 358,pieces
+359,Glass Clear 8 Oz 359,kg
+360,Swiss Chard 360,liters
+361,Lobak 361,liters
+362,Cheese - Cheddar With Claret 362,pieces
+363,Chervil - Fresh 363,grams
+364,Port - 74 Brights 364,grams
+365,"Split Peas - Yellow, Dry 365",ml
+366,Cookies - Amaretto 366,pieces
+367,Mushroom Morel Fresh 367,grams
+368,"Soup - Canadian Pea, Dry Mix 368",oz
+369,"Pepper - Green, Chili 369",kg
+370,Curry Paste - Green Masala 370,grams
+371,Flavouring - Rum 371,grams
+372,Crab Brie In Phyllo 372,grams
+373,Muffin Mix - Chocolate Chip 373,oz
+374,"Crab - Dungeness, Whole, live 374",grams
+375,Wine - Segura Viudas Aria Brut 375,kg
+376,"Wine - Red, Colio Cabernet 376",oz
+377,Tahini Paste 377,grams
+378,Mangostein 378,liters
+379,Compound - Passion Fruit 379,grams
+380,Squid Ink 380,oz
+381,Chick Peas - Dried 381,grams
+382,Soup - Cream Of Potato / Leek 382,pieces
+383,Honey - Comb 383,liters
+384,Wine - Two Oceans Sauvignon 384,liters
+385,Coffee Beans - Chocolate 385,ml
+386,Pork - Backfat 386,ml
+387,Butter - Pod 387,grams
+388,Kiwi 388,grams
+389,Sugar - Crumb 389,ml
+390,Rootbeer 390,kg
+391,Wasabi Powder 391,ml
+392,Muffin Hinge - 211n 392,liters
+393,Glaze - Apricot 393,liters
+394,Wine - Chardonnay Mondavi 394,ml
+395,Pea - Snow 395,liters
+396,Table Cloth 54x72 White 396,grams
+397,Browning Caramel Glace 397,ml
+398,"Pork - Butt, Boneless 398",kg
+399,Wine - German Riesling 399,pieces
+400,Pate - Liver 400,ml
+401,Pea - Snow 401,pieces
+402,Wine - Coteaux Du Tricastin Ac 402,grams
+403,Truffle Cups - Red 403,grams
+404,Asparagus - Mexican 404,grams
+405,Sterno - Chafing Dish Fuel 405,oz
+406,Sprouts - Alfalfa 406,ml
+407,Sour Puss - Tangerine 407,kg
+408,Mussels - Cultivated 408,pieces
+409,Chicken - Livers 409,liters
+410,Compound - Strawberry 410,pieces
+411,Cheese Cloth 411,pieces
+412,"Coke - Diet, 355 Ml 412",grams
+413,Pepper - Chilli Seeds Mild 413,kg
+414,Fenngreek Seed 414,kg
+415,Oil - Pumpkinseed 415,liters
+416,Shrimp - Black Tiger 16/20 416,grams
+417,"Pepper - Black, Crushed 417",oz
+418,"Soup - Knorr, Classic Can. Chili 418",oz
+419,"Jam - Raspberry,jar 419",oz
+420,Seedlings - Clamshell 420,oz
+421,Wood Chips - Regular 421,kg
+422,Chambord Royal 422,ml
+423,"Soup - Knorr, French Onion 423",oz
+424,Mustard - Seed 424,pieces
+425,"Lamb - Leg, Diced 425",oz
+426,Juice - Apple 284ml 426,grams
+427,Celery 427,grams
+428,Bananas 428,kg
+429,Stock - Fish 429,oz
+430,Fish - Bones 430,liters
+431,Wine - Prosecco Valdobienne 431,grams
+432,"Lamb - Whole Head Off,nz 432",pieces
+433,Cheese - Le Cru Du Clocher 433,pieces
+434,Milk - 2% 434,grams
+435,Wine - Chardonnay Mondavi 435,ml
+436,Foil - Round Foil 436,oz
+437,Sunflower Seed Raw 437,kg
+438,"Veal - Brisket, Provimi,bnls 438",oz
+439,Wine - Guy Sage Touraine 439,ml
+440,Juice - Orange 1.89l 440,kg
+441,Chick Peas - Dried 441,ml
+442,Crab - Imitation Flakes 442,grams
+443,Eggwhite Frozen 443,pieces
+444,Wine - Wyndham Estate Bin 777 444,oz
+445,"Bread - Roll, Soft White Round 445",liters
+446,Pork - Side Ribs 446,oz
+447,"Tray - Foam, Square 4 - S 447",oz
+448,Pork - Belly Fresh 448,oz
+449,Chicken - Base 449,grams
+450,Sachet 450,oz
+451,"Jam - Blackberry, 20 Ml Jar 451",ml
+452,Sprouts - Peppercress 452,oz
+453,Sorrel - Fresh 453,oz
+454,Pepper - Chili Powder 454,ml
+455,Sterno - Chafing Dish Fuel 455,liters
+456,Bagelers - Cinn / Brown Sugar 456,liters
+457,"Noodles - Cellophane, Thin 457",kg
+458,Greens Mustard 458,oz
+459,Bag - Clear 7 Lb 459,kg
+460,Bamboo Shoots - Sliced 460,liters
+461,Lamb - Ground 461,grams
+462,Bay Leaf Ground 462,grams
+463,Wine - Cousino Macul Antiguas 463,grams
+464,Onions - Red 464,kg
+465,"Rum - Coconut, Malibu 465",pieces
+466,Onions Granulated 466,grams
+467,Bread - Hot Dog Buns 467,ml
+468,Gherkin - Sour 468,oz
+469,Wanton Wrap 469,kg
+470,Yoplait - Strawbrasp Peac 470,liters
+471,"Syrup - Monin, Amaretta 471",grams
+472,Crab Meat Claw Pasteurise 472,kg
+473,Salt - Seasoned 473,oz
+474,Edible Flower - Mixed 474,pieces
+475,Orange - Tangerine 475,ml
+476,Dried Figs 476,pieces
+477,Bread Country Roll 477,kg
+478,Beer - Heinekin 478,pieces
+479,Mushrooms - Honey 479,liters
+480,Beef - Diced 480,kg
+481,Pickle - Dill 481,oz
+482,V8 - Vegetable Cocktail 482,pieces
+483,Sage - Fresh 483,kg
+484,"Mushroom - Chanterelle, Dry 484",pieces
+485,Paper Towel Touchless 485,pieces
+486,Coffee - Flavoured 486,ml
+487,Pork - Backfat 487,grams
+488,Capers - Ox Eye Daisy 488,grams
+489,Energy Drink Bawls 489,oz
+490,Cheese - Comtomme 490,pieces
+491,"Star Anise, Whole 491",kg
+492,Shrimp - 100 / 200 Cold Water 492,pieces
+493,Chicken - Wieners 493,grams
+494,Flavouring - Orange 494,grams
+495,"Garlic - Primerba, Paste 495",ml
+496,Tea - Herbal I Love Lemon 496,grams
+497,Aspic - Light 497,ml
+498,Transfer Sheets 498,ml
+499,Foam Espresso Cup Plain White 499,oz
+500,"Cherries - Maraschino,jar 500",kg
