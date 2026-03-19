@@ -50,12 +50,13 @@ Below are the conceptual screens representing the "Top-Down" design of the appli
 
 ### ERD (Entity Relationship Diagram)
 The ERD illustrates the conceptual logical entities and their relationships.
-![ERD Diagram](./Stage%20A/ERD Menu Managment Department 5786.png)
+
+![ERD Diagram](./Stage%20A/ERD%20Menu%20Managment%20Department%205786.png)
 
 ### DSD (Data Schema Diagram)
 The DSD (Relational Schema) shows the physical table structures, including Primary and Foreign Keys.
-![DSD Diagram](./Stage%20A/DSD Menu Managment Department 5786-Relational Schema.png)
 
+![DSD Diagram](./Stage%20A/DSD%20Menu%20Managment%20Department%205786-Relational%20Schema.png)
 ---
 
 ## 🗃️ Data Structure Description
