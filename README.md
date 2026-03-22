@@ -41,8 +41,21 @@ The **Menu Management Department** is the backbone of the restaurant's operation
 
 Below are the conceptual screens representing the "Top-Down" design of the application:
 
-> ![System UI]([LIEN_DE_TA_CAPTURE_AI_STUDIO])
-> *Caption: Dashboard for menu administration and item management.*
+**Dashboard**
+![App Screen 1](./Stage%20A/Screenshots/App1.png)
+
+**Menu Management**
+![App Screen 2](./Stage%20A/Screenshots/App2.png)
+
+**Live Menu View**
+![App Screen 3](./Stage%20A/Screenshots/App3.png)
+
+**Menu Analytics**
+![App Screen 4](./Stage%20A/Screenshots/App4.png)
+
+### 🔗 Interactive Prototype
+You can access the interactive application design generated in Google AI Studio via the following link:
+[**View Interactive Menu Management Prototype**](https://aistudio.google.com/apps/fea1348c-0085-43f5-a3fc-40957a48e11b?showPreview=true&showAssistant=true)
 
 ---
 
@@ -128,15 +141,21 @@ The database was populated with over **41,000 records** using three distinct met
 
 ### ✅ Method A: Mockaroo (SQL Scripts)
 Used to generate 500 realistic records for Categories, Menu Items, and Recipes.
-> ![Mockaroo Screenshot]([LIEN_DE_TA_CAPTURE_MOCKAROO])
+![Mockaroo Screenshot](./Stage%20A/Screenshots/Mockaroo.png)
+
+![Mockaroo Screenshot](./Stage%20A/Screenshots/Mockaroo_pgAdmin.png)
 
 ### ✅ Method B: Data Import (CSV)
 The `Ingredient` table was populated by importing an external `ingredients.csv` file using pgAdmin's Import tool.
-> ![pgAdmin Import]([LIEN_DE_TA_CAPTURE_IMPORT_PGADMIN])
+![pgAdmin Import](./Stage%20A/Screenshots/Ingredient_csv.png)
+
+![pgAdmin Import](./Stage%20A/Screenshots/Ingredient_csv_IMPORT.png)
 
 ### ✅ Method C: Python Scripting
 A custom Python script was developed to generate high-volume data (**20,000 rows each**) for the associative and log tables.
-> ![Python Execution]([LIEN_DE_TA_CAPTURE_PYTHON])
+![Python Execution](./Stage%20A/Screenshots/PythonScript.png)
+
+![Python Execution](./Stage%20A/Screenshots/PythonScript_pgAdmin.png)
 
 ---
 
@@ -144,7 +163,7 @@ A custom Python script was developed to generate high-volume data (**20,000 rows
 To ensure project safety and portability, a full database backup was performed and tested.
 
 1.  **Backup Process:** Created a compressed `.tar` archive.
-    > ![Backup Success]([LIEN_DE_LA_CAPTURE_BACKUP_COMPLETED])
+![Backup Success](./Stage%20A/Screenshots/Backup.png)
 
 2.  **Restoration Test:** The backup was successfully restored into a fresh database named `DB_Test_Restore`.
-    > ![Restore Verification]([LIEN_DE_LA_CAPTURE_SELECT_COUNT])
+![Restore Verification](./Stage%20A/Screenshots/Restore.png)
