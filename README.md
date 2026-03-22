@@ -42,15 +42,19 @@ The **Menu Management Department** is the backbone of the restaurant's operation
 Below are the conceptual screens representing the "Top-Down" design of the application:
 
 **Dashboard**
+
 ![App Screen 1](./Stage%20A/Screenshots/App1.png)
 
 **Menu Management**
+
 ![App Screen 2](./Stage%20A/Screenshots/App2.png)
 
 **Live Menu View**
+
 ![App Screen 3](./Stage%20A/Screenshots/App3.png)
 
 **Menu Analytics**
+
 ![App Screen 4](./Stage%20A/Screenshots/App4.png)
 
 ### 🔗 Interactive Prototype
@@ -70,6 +74,7 @@ The ERD illustrates the conceptual logical entities and their relationships.
 The DSD (Relational Schema) shows the physical table structures, including Primary and Foreign Keys.
 
 ![DSD Diagram](./Stage%20A/DSD%20Menu%20Managment%20Department%205786-Relational%20Schema.png)
+
 ---
 
 ## 🗃️ Data Structure Description
@@ -141,18 +146,21 @@ The database was populated with over **41,000 records** using three distinct met
 
 ### ✅ Method A: Mockaroo (SQL Scripts)
 Used to generate 500 realistic records for Categories, Menu Items, and Recipes.
+
 ![Mockaroo Screenshot](./Stage%20A/Screenshots/Mockaroo.png)
 
 ![Mockaroo Screenshot](./Stage%20A/Screenshots/Mockaroo_pgAdmin.png)
 
 ### ✅ Method B: Data Import (CSV)
 The `Ingredient` table was populated by importing an external `ingredients.csv` file using pgAdmin's Import tool.
+
 ![pgAdmin Import](./Stage%20A/Screenshots/Ingredient_csv.png)
 
 ![pgAdmin Import](./Stage%20A/Screenshots/Ingredient_csv_IMPORT.png)
 
 ### ✅ Method C: Python Scripting
 A custom Python script was developed to generate high-volume data (**20,000 rows each**) for the associative and log tables.
+
 ![Python Execution](./Stage%20A/Screenshots/PythonScript.png)
 
 ![Python Execution](./Stage%20A/Screenshots/PythonScript_pgAdmin.png)
@@ -163,7 +171,9 @@ A custom Python script was developed to generate high-volume data (**20,000 rows
 To ensure project safety and portability, a full database backup was performed and tested.
 
 1.  **Backup Process:** Created a compressed `.tar` archive.
+
 ![Backup Success](./Stage%20A/Screenshots/Backup.png)
 
 2.  **Restoration Test:** The backup was successfully restored into a fresh database named `DB_Test_Restore`.
+
 ![Restore Verification](./Stage%20A/Screenshots/Restore.png)
