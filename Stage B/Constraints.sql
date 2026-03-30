@@ -6,7 +6,7 @@
 ALTER TABLE INGREDIENT ADD CONSTRAINT check_unit_standard CHECK (unit IN ('kg', 'grams', 'ml', 'liters', 'pieces', 'oz'));
 
 -- 2. Preventing pricing entry errors
-ALTER TABLE MENU_ITEM ADD CONSTRAINT check_max_price CHECK (price < 500);
+ALTER TABLE MENU_ITEM ADD CONSTRAINT check_max_price CHECK (price < 500 AND price > 0);
 
 -- 3. Ensuring meaningful item names
 ALTER TABLE MENU_ITEM ADD CONSTRAINT check_item_name_length CHECK (LENGTH(item_name) >= 3);
