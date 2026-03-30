@@ -1,7 +1,3 @@
-/* =============================================================================
-   STAGE B: QUERIES (SELECT, UPDATE, DELETE)
-   ============================================================================= */
-
 -- QUERY 1: List all menu items added in 2024 with their category names.
 -- Explanation: This query extracts the year from the date and joins two tables to provide context.
 
@@ -115,6 +111,24 @@ WHERE EXTRACT(DOW FROM mcl.change_date) IN (5, 6) -- 5=Friday, 6=Saturday
 ORDER BY mcl.change_date DESC;
 
 
+-- DELETE 1: Archive/Remove modification logs older than 3 years.
+-- Explanation: Maintenance task to prevent the log table from growing excessively.
+DELETE FROM MENU_CHANGE_LOG 
+WHERE change_date < CURRENT_DATE - INTERVAL '3 years';
+
+
+-- DELETE 2: Remove empty categories (categories with no associated items).
+-- Explanation: Ensures logical menu structure by removing unused groups.
+DELETE FROM MENU_CATEGORY
+WHERE category_id NOT IN (SELECT DISTINCT category_id FROM MENU_ITEM);
+
+
+-- DELETE 3: Clean up recipe lines with negligible quantities.
+-- Explanation: Simplification of recipe technical sheets for kitchen use.
+DELETE FROM RECIPE_INGREDIENT
+WHERE quantity < 0.001;
+
+
 -- UPDATE 1: Apply inflation adjustment (12% increase) to items containing "Beef".
 -- Explanation: Updates prices based on recipe composition and ingredient keywords.
 UPDATE MENU_ITEM 
@@ -142,21 +156,3 @@ UPDATE MENU_CHANGE_LOG
 SET change_description = 'Routine morning system check'
 WHERE change_description IS NULL 
 AND EXTRACT(HOUR FROM change_date) < 10;
-
-
--- DELETE 1: Archive/Remove modification logs older than 3 years.
--- Explanation: Maintenance task to prevent the log table from growing excessively.
-DELETE FROM MENU_CHANGE_LOG 
-WHERE change_date < CURRENT_DATE - INTERVAL '3 years';
-
-
--- DELETE 2: Remove empty categories (categories with no associated items).
--- Explanation: Ensures logical menu structure by removing unused groups.
-DELETE FROM MENU_CATEGORY
-WHERE category_id NOT IN (SELECT DISTINCT category_id FROM MENU_ITEM);
-
-
--- DELETE 3: Clean up recipe lines with negligible quantities.
--- Explanation: Simplification of recipe technical sheets for kitchen use.
-DELETE FROM RECIPE_INGREDIENT
-WHERE quantity < 0.001;

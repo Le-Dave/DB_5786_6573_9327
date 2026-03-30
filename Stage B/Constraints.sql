@@ -1,7 +1,3 @@
--- ==========================================
--- STAGE B: NEW CONSTRAINTS (ALTER TABLE)
--- ==========================================
-
 -- 1. Standardizing measurement units
 ALTER TABLE INGREDIENT ADD CONSTRAINT check_unit_standard CHECK (unit IN ('kg', 'grams', 'ml', 'liters', 'pieces', 'oz'));
 
