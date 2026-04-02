@@ -49,18 +49,24 @@ FROM MENU_ITEM mi
 WHERE mi.price > (SELECT AVG(price) FROM MENU_ITEM mi3 WHERE mi3.category_id = mi.category_id);
 
 
--- QUERY 4: Identify menu items that have never been modified (no log entries).
--- Explanation: A negation query to find "static" data in the system.
+-- QUERY 4: Identify items that have NOT been modified during the year 2026.
+-- Explanation: A negation query using a date filter to find items that remained "static" this year.
 
--- Version A: Using NOT EXISTS (Usually faster in PostgreSQL as it stops at the first match found)
-SELECT item_name, added_date, is_available
+-- Version A: Using NOT EXISTS (More efficient)
+SELECT mi.item_name, mi.added_date, mi.price
 FROM MENU_ITEM mi
-WHERE NOT EXISTS (SELECT 1 FROM MENU_CHANGE_LOG mcl WHERE mcl.menu_item_id = mi.menu_item_id);
+WHERE NOT EXISTS (
+    SELECT 1 
+    FROM MENU_CHANGE_LOG mcl 
+    WHERE mcl.menu_item_id = mi.menu_item_id 
+    AND EXTRACT(YEAR FROM mcl.change_date) = 2026
+);
 
--- Version B: Using LEFT JOIN / IS NULL (Standard approach but requires scanning all matches before filtering)
-SELECT mi.item_name, mi.added_date, mi.is_available
+-- Version B: Using LEFT JOIN / IS NULL (Less efficient)
+SELECT mi.item_name, mi.added_date, mi.price
 FROM MENU_ITEM mi
-LEFT JOIN MENU_CHANGE_LOG mcl ON mi.menu_item_id = mcl.menu_item_id
+LEFT JOIN MENU_CHANGE_LOG mcl ON mi.menu_item_id = mcl.menu_item_id 
+    AND EXTRACT(YEAR FROM mcl.change_date) = 2026
 WHERE mcl.change_id IS NULL;
 
 
@@ -111,10 +117,10 @@ WHERE EXTRACT(DOW FROM mcl.change_date) IN (5, 6) -- 5=Friday, 6=Saturday
 ORDER BY mcl.change_date DESC;
 
 
--- DELETE 1: Archive/Remove modification logs older than 3 years.
+-- DELETE 1: Archive/Remove modification logs older than 2 years.
 -- Explanation: Maintenance task to prevent the log table from growing excessively.
 DELETE FROM MENU_CHANGE_LOG 
-WHERE change_date < CURRENT_DATE - INTERVAL '3 years';
+WHERE change_date < CURRENT_DATE - INTERVAL '2 years';
 
 
 -- DELETE 2: Remove empty categories (categories with no associated items).
@@ -126,7 +132,7 @@ WHERE category_id NOT IN (SELECT DISTINCT category_id FROM MENU_ITEM);
 -- DELETE 3: Clean up recipe lines with negligible quantities.
 -- Explanation: Simplification of recipe technical sheets for kitchen use.
 DELETE FROM RECIPE_INGREDIENT
-WHERE quantity < 0.001;
+WHERE quantity < 0.005;
 
 
 -- UPDATE 1: Apply inflation adjustment (12% increase) to items containing "Beef".
@@ -142,11 +148,11 @@ WHERE menu_item_id IN (
 );
 
 
--- UPDATE 2: Mark old "Seafood" items as unavailable.
+-- UPDATE 2: Mark old "BBQ" items as unavailable.
 -- Explanation: Administrative update for seasonal menu cleanup.
 UPDATE MENU_ITEM
 SET is_available = FALSE
-WHERE category_id IN (SELECT category_id FROM MENU_CATEGORY WHERE category_name LIKE '%Seafood%')
+WHERE category_id IN (SELECT category_id FROM MENU_CATEGORY WHERE category_name LIKE '%BBQ%')
 AND added_date < CURRENT_DATE - INTERVAL '2 years';
 
 
