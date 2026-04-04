@@ -32,7 +32,7 @@
 11. [UPDATE Queries](#-update-queries)
 12. [Database Constraints & Alterations](#-database-constraints--alterations)
 13. [Transaction Control](#-transaction-control-rollback--commit)
-14. [Backup and Recovery - Stage B](#-backup-and-recovery)
+14. [Backup and Recovery - Stage B](#-backup-and-recovery---stage-b)
 
 ---
 
