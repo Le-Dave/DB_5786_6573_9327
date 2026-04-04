@@ -32,6 +32,7 @@
 11. [UPDATE Queries](#-update-queries)
 12. [Database Constraints & Alterations](#-database-constraints--alterations)
 13. [Transaction Control](#-transaction-control-rollback--commit)
+14. [Backup and Recovery - Stage B](#-backup-and-recovery)
 
 ---
 
@@ -489,7 +490,7 @@ AND EXTRACT(HOUR FROM change_date) < 10;
 
 ## 🛡️ Database Constraints & Alterations
 
-### 1. Standardized Measurement Units
+### Constraint 1: Standardized Measurement Units
 **What it does:** Uses ALTER TABLE to restrict the unit column in the Ingredient table to a pre-defined list of culinary units (kg, g, ml, etc.), preventing data entry typos.
 
 ```sql
@@ -505,7 +506,7 @@ VALUES ('Test Ingredient', 'box');
 
 ![C1 Error](./Stage%20B/Screenshots/New_Constraint_1.png)
 
-### 2. Price Safety Cap ($500)
+### Constraint 2: Price Safety Cap ($500)
 **What it does:** Implements a price ceiling of $500 for any menu item to prevent catastrophic typing errors (e.g., $1000 instead of $10.00).
 
 ```sql
@@ -521,7 +522,7 @@ VALUES ('Gold Burger', 650.00, TRUE, CURRENT_DATE, 1);
 
 ![C2 Error](./Stage%20B/Screenshots/New_Constraint_2.png)
 
-### 3. Minimum Item Name Length
+### Constraint 3: Minimum Item Name Length
 **What it does:** Ensures that every dish name in the `MENU_ITEM` table consists of at least 3 characters. This prevents the entry of non-descriptive placeholders (like "A" or "TBD") and maintains a professional-looking customer menu.
 
 ```sql
@@ -537,7 +538,7 @@ VALUES ('A', 15.00, TRUE, CURRENT_DATE, 1);
 
 ![C3 Error](./Stage%20B/Screenshots/New_Constraint_3.png)
 
-### 4. Historical Log Date Validation
+### Constraint 4: Historical Log Date Validation
 **What it does:** Validates that no entry in the `MENU_CHANGE_LOG` is dated prior to January 1st, 2020 (the system's launch year). This maintains historical integrity by preventing logs from being accidentally backdated to impossible years.
 
 ```sql
@@ -557,20 +558,106 @@ VALUES ('Legacy change', '1995-01-01', 1);
 
 ## 🔄 Transaction Control (Rollback & Commit)
 
-### Demo 8: ROLLBACK (Undo Error)
-1. **Original State:** [Initial data]
-2. **After ROLLBACK:**
-![Rollback Proof](./Stage%20B/Screenshots/Rollback_Proof.png)
-*Result: Database reverted to original state.*
+### 🔙 Rollback Transaction
+**What it does:** Demonstrates the use of the ROLLBACK command to undo changes made during a transaction. This ensures data integrity by allowing users to discard erroneous or unwanted modifications before they are permanently saved to the database. Our example : Simulates an administrator error - accidental $50 increase menu-wide.
 
-### Demo 9: COMMIT (Persistent Update)
-1. **Original State:** [Initial data]
-2. **After COMMIT:**
-![Commit Proof](./Stage%20B/Screenshots/Commit_Proof.png)
-*Result: Changes successfully saved to storage.*
+```sql
+-- Step 1: Baseline check - View the original prices of the first 5 items
+SELECT menu_item_id, item_name, price 
+FROM MENU_ITEM 
+ORDER BY menu_item_id 
+LIMIT 5;
+
+-- Step 2: Start the transaction
+BEGIN;
+
+-- Step 3: Simulate the error (Unintended price increase)
+UPDATE MENU_ITEM 
+SET price = price + 50;
+
+-- Step 4: Verification of the "Modified" state
+-- The prices are now inflated.
+SELECT menu_item_id, item_name, price 
+FROM MENU_ITEM 
+ORDER BY menu_item_id 
+LIMIT 5;
+
+-- Step 5: Cancel the transaction and undo the changes
+ROLLBACK;
+
+-- Step 6: Final verification - Check that prices returned to their original values
+SELECT menu_item_id, item_name, price 
+FROM MENU_ITEM 
+ORDER BY menu_item_id 
+LIMIT 5;
+```
+
+**Original State:** - *Prices are normal.*
+
+![Rollback Proof](./Stage%20B/Screenshots/Rollback_1.png)
+
+**State after UPDATE (before ROLLBACK):** - *Prices are inflated.*
+
+![Rollback Proof](./Stage%20B/Screenshots/Rollback_2.png)
+
+**After ROLLBACK:** - *Prices are back to normal.*
+
+![Rollback Proof](./Stage%20B/Screenshots/Rollback_3.png)
+
+### ✅ Commit Transaction
+**What it does:** Demonstrates the use of the COMMIT command to save changes made during a transaction to the database. This ensures data integrity by allowing users to save erroneous or unwanted modifications before they are permanently saved to the database. Our example : Management applies a permanent +100 calorie adjustment for nutritional updates.
+
+```sql
+-- Step 1: Baseline check - View current calorie counts for the first 5 items
+SELECT menu_item_id, item_name, calories 
+FROM MENU_ITEM 
+WHERE calories IS NOT NULL
+ORDER BY menu_item_id 
+LIMIT 5;
+
+-- Step 2: Start the transaction
+BEGIN;
+
+-- Step 3: Apply the update (Nutritional adjustment)
+-- We increase calories by 100 for all items that have a calorie value recorded
+UPDATE MENU_ITEM 
+SET calories = calories + 100
+WHERE calories IS NOT NULL;
+
+-- Step 4: Verification of the "Modified" state within the transaction
+-- Calorie counts should now be 100 units higher than in Step 1
+SELECT menu_item_id, item_name, calories 
+FROM MENU_ITEM 
+WHERE calories IS NOT NULL
+ORDER BY menu_item_id 
+LIMIT 5;
+
+-- Step 5: Save the changes permanently to the database
+COMMIT;
+
+-- Step 6: Final verification - Confirm that the +100 calorie adjustment persists
+SELECT menu_item_id, item_name, calories 
+FROM MENU_ITEM 
+WHERE calories IS NOT NULL
+ORDER BY menu_item_id 
+LIMIT 5;    
+```
+
+**Original State:** - *Calorie counts are normal.*
+
+![Commit Proof](./Stage%20B/Screenshots/Commit_1.png)
+
+**State after UPDATE (before COMMIT):** - *Calorie counts are inflated.*
+
+![Commit Proof](./Stage%20B/Screenshots/Commit_2.png)
+
+**After COMMIT:** - *The changes are saved permanently to the database.*
+
+![Commit Proof](./Stage%20B/Screenshots/Commit_3.png)
 
 ---
 
-## 💾 Backup and Recovery (Stage B)
+## 💾 Backup and Recovery - Stage B
 Final stage backup in `.tar` format.
-![Backup 2](./Stage%20B/Screenshots/Backup2_Final.png)
+
+![Backup 2](./Stage%20B/Screenshots/Backup2.png)
