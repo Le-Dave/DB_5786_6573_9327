@@ -1,207 +1,239 @@
-# 📘 Restaurant Management System
+# 📘 מערכת ניהול מסעדה
 
-**Department:** Menu Management
-
----
-
-## 👨‍💻 Authors
-*   **David Nahum** - ID: 341106573
-*   **Neriya Horenczyk** - ID: 208729327
-
-## 🏢 Project Scope
-*   **System:** Restaurant Management System
-*   **Unit:** Menu Management Department
+**מחלקה:** ניהול תפריט
 
 ---
 
-## 📌 Table of Contents
+## 👨‍💻 מחברים
 
-### Stage A: Database Design & Foundation
-1.  [Overview](#-overview)
-2.  [System Interface](#-system-interface)
-3.  [ERD and DSD Diagrams](#-erd-and-dsd-diagrams)
-4.  [Data Structure Description](#-data-structure-description)
-5.  [Design Decisions](#-design-decisions)
-6.  [Data Insertion Methods](#-data-insertion-methods)
-7.  [Backup and Recovery](#-backup-and-recovery)
+- **דוד נחום** - ת.ז: 341106573
+- **נריה הורנצ'יק** - ת.ז: 208729327
 
-### Stage B: Advanced Queries & Data Integrity
-8. [Comparative SELECT Queries](#-comparative-select-queries)
-9. [Additional SELECT Queries](#-additional-select-queries)
-10. [DELETE Queries](#-delete-queries)
-11. [UPDATE Queries](#-update-queries)
-12. [Database Constraints & Alterations](#-database-constraints--alterations)
-13. [Transaction Control](#-transaction-control-rollback--commit)
-14. [Backup and Recovery - Stage B](#-backup-and-recovery---stage-b)
+## 🏢 תחום הפרויקט
+
+- **מערכת:** מערכת ניהול מסעדה
+- **יחידה:** מחלקת ניהול תפריט
 
 ---
 
-# 🏁 STAGE A: DATABASE DESIGN & FOUNDATION
+## 📌 תוכן עניינים
 
-## 📃 Overview
-The **Menu Management Department** is the backbone of the restaurant's operational flow. This system is designed to manage the entire lifecycle of a dish, from its broad categorization to the technical granular details of its recipe and ingredients.
+### שלב א': עיצוב מסד הנתונים והבסיס
 
-**Key functionalities:**
-*   Organizing menu items into logical categories.
-*   Defining precise technical recipes for kitchen staff.
-*   Linking recipes to ingredient inventory for future stock tracking.
-*   Maintaining a full audit trail of any changes (price, availability) made to the menu.
+1.  [סקירה כללית](#-סקירה-כללית)
+2.  [ממשק המערכת](#-ממשק-המערכת)
+3.  [דיאגרמות ERD ו-DSD](#-דיאגרמות-erd-ו-dsd)
+4.  [תיאור מבנה הנתונים](#-תיאור-מבנה-הנתונים)
+5.  [החלטות עיצוב](#-החלטות-עיצוב)
+6.  [שיטות הכנסת נתונים](#-שיטות-הכנסת-נתונים)
+7.  [גיבוי ושחזור](#-גיבוי-ושחזור)
 
----
+### שלב ב': שאילתות מתקדמות ושלמות נתונים
 
-## 🖥️ System Interface
-*Generated using Google AI Studio*
-
-Below are the conceptual screens representing the "Top-Down" design of the application:
-
-**Dashboard**
-
-![App Screen 1](./Stage%20A/Screenshots/App1.png)
-
-**Menu Management**
-
-![App Screen 2](./Stage%20A/Screenshots/App2.png)
-
-**Live Menu View**
-
-![App Screen 3](./Stage%20A/Screenshots/App3.png)
-
-**Menu Analytics**
-
-![App Screen 4](./Stage%20A/Screenshots/App4.png)
-
-### 🔗 Interactive Prototype
-You can access the interactive application design generated in Google AI Studio via the following link:
-[**View Interactive Menu Management Prototype**](https://aistudio.google.com/apps/fea1348c-0085-43f5-a3fc-40957a48e11b?showPreview=true&showAssistant=true)
+8. [שאילתות SELECT השוואתיות](#-שאילתות-select-השוואתיות)
+9. [שאילתות SELECT נוספות](#-שאילתות-select-נוספות)
+10. [שאילתות DELETE](#-שאילתות-delete)
+11. [שאילתות UPDATE](#-שאילתות-update)
+12. [אילוצי מסד הנתונים ושינויים](#-אילוצי-מסד-הנתונים-ושינויים)
+13. [בקרת טרנזקציות](#-בקרת-טרנזקציות-rollback--commit)
+14. [גיבוי ושחזור - שלב ב'](#-גיבוי-ושחזור---שלב-ב)
 
 ---
 
-## 📂 ERD and DSD Diagrams
+# 🏁 שלב א': עיצוב מסד הנתונים והבסיס
 
-### ERD (Entity Relationship Diagram)
-The ERD illustrates the conceptual logical entities and their relationships.
+## 📃 סקירה כללית
 
-![ERD Diagram](./Stage%20A/ERD%20Menu%20Managment%20Department%205786.png)
+**מחלקת ניהול התפריט** היא עמוד השדרה של תהליך העבודה התפעולי של המסעדה. המערכת מיועדת לנהל את מחזור החיים המלא של מנה, החל מהקטגוריה הרחבה שלה ועד לפרטים הטכניים הגרגורים של המתכון והמרכיבים.
 
-### DSD (Data Schema Diagram)
-The DSD (Relational Schema) shows the physical table structures, including Primary and Foreign Keys.
+**פונקציות מרכזיות:**
 
-![DSD Diagram](./Stage%20A/DSD%20Menu%20Managment%20Department%205786-Relational%20Schema.png)
-
----
-
-## 🗃️ Data Structure Description
-The database consists of **6 tables** designed to handle everything from high-level menu organization to granular ingredient measurements.
-
-### 1. MENU_CATEGORY
-This table serves as the primary organizational structure for the menu.
-*   **category_id (PK):** A unique auto-incremented integer (Serial) identifying each category.
-*   **category_name:** A unique descriptive name (e.g., 'Main Courses', 'Beverages').
-    *   *Constraint:* Must be unique and contain at least 2 characters.
-*   **description (Optional):** A brief text describing what the category includes.
-
-### 2. INGREDIENT
-Represents the raw materials available in the restaurant's pantry.
-*   **ingredient_id (PK):** Unique identifier for each raw ingredient.
-*   **ingredient_name:** The name of the ingredient (e.g., 'Sea Salt', 'Organic Flour').
-    *   *Constraint:* Must be unique to prevent stock duplication.
-*   **unit:** The standard unit of measurement for this ingredient (e.g., 'kg', 'grams', 'liters', 'pcs').
-
-### 3. MENU_ITEM
-The central entity of the system, representing the dishes sold to customers.
-*   **menu_item_id (PK):** Unique identifier for each dish.
-*   **item_name:** The commercial name of the dish.
-    *   *Constraint:* Must be unique.
-*   **price:** The sale price of the item.
-    *   *Constraint:* Must be greater than 0.
-*   **description (Optional):** Commercial description to be displayed on the menu.
-*   **is_available:** A boolean flag indicating if the dish is currently orderable.
-*   **added_date:** The date the item was first introduced to the menu.
-    *   *Constraint:* Cannot be a future date (<= Current Date).
-*   **calories (Optional):** Total caloric value for nutritional information.
-    *   *Constraint:* Must be greater than or equal to 0.
-*   **category_id (FK):** Links the item to its parent category.
-
-### 4. RECIPE
-An extension of the Menu Item that provides technical cooking data.
-*   **recipe_id (PK):** Unique identifier for the recipe.
-*   **instructions:** Detailed step-by-step text on how to prepare the dish.
-    *   *Constraint:* Must contain at least 10 characters to ensure sufficient detail.
-*   **menu_item_id (FK/Unique):** Links the recipe to exactly one menu item, maintaining a **1:1 relationship**.
-
-### 5. RECIPE_INGREDIENT
-An associative table that defines the specific composition of each recipe. This table allows the many-to-many relationship between Recipes and Ingredients.
-*   **recipe_ingredient_id (PK):** Unique identifier for each line in the composition.
-*   **quantity:** The exact amount of the ingredient needed for the recipe.
-    *   *Constraint:* Must be greater than 0.
-*   **recipe_id (FK):** Reference to the recipe being composed.
-*   **ingredient_id (FK):** Reference to the raw ingredient being used.
-
-### 6. MENU_CHANGE_LOG
-An audit table used to track all administrative changes made to the menu over time.
-*   **change_id (PK):** Unique identifier for the log entry.
-*   **change_description (Optional):** Explanation of what was modified (e.g., 'Price increase', 'Name correction').
-*   **change_date:** Timestamp of when the modification occurred.
-*   **menu_item_id (FK):** Reference to the specific menu item that was modified.
+- ארגון פריטי התפריט לקטגוריות לוגיות.
+- הגדרת מתכונים טכניים מדויקים לצוות המטבח.
+- קישור מתכונים למלאי המרכיבים למעקב עתידי.
+- שמירת רשומת ביקורת מלאה של כל שינוי (מחיר, זמינות) שנעשה בתפריט.
 
 ---
 
-## 🧠 Design Decisions
-*   **3NF Normalization:** The schema is fully normalized to the 3rd Normal Form to eliminate data redundancy and ensure integrity.
-*   **Identifying Relationships:** We used identifying relationships for `Recipe` and `Log` as they cannot exist without a parent `Menu_Item`.
-*   **Data Integrity:** Implemented `CHECK` constraints on price (>0), calories (>=0), and quantity (>0) to prevent logical data entry errors.
-*   **Temporal Tracking:** Included `added_date` and `change_date` to satisfy the requirement for significant date attributes.
+## 🖥️ ממשק המערכת
+
+_נוצר באמצעות Google AI Studio_
+
+להלן מסכי הרעיון המייצגים את עיצוב "מלמעלה למטה" של האפליקציה:
+
+**לוח בקרה**
+
+![מסך אפליקציה 1](./Stage%20A/Screenshots/App1.png)
+
+**ניהול תפריט**
+
+![מסך אפליקציה 2](./Stage%20A/Screenshots/App2.png)
+
+**תצוגת תפריט חי**
+
+![מסך אפליקציה 3](./Stage%20A/Screenshots/App3.png)
+
+**ניתוח תפריט**
+
+![מסך אפליקציה 4](./Stage%20A/Screenshots/App4.png)
+
+### 🔗 אב-טיפוס אינטראקטיבי
+
+ניתן לגשת לעיצוב האפליקציה האינטראקטיבי שנוצר ב-Google AI Studio דרך הקישור הבא:
+[**צפייה באב-טיפוס האינטראקטיבי לניהול תפריט**](https://aistudio.google.com/apps/fea1348c-0085-43f5-a3fc-40957a48e11b?showPreview=true&showAssistant=true)
 
 ---
 
-## 📥 Data Insertion Methods
-The database was populated with over **41,000 records** using three distinct methods:
+## 📂 דיאגרמות ERD ו-DSD
 
-### ✅ Method A: Mockaroo (SQL Scripts)
-Used to generate 500 realistic records for Categories, Menu Items, and Recipes.
+### ERD (דיאגרמת קשרי ישויות)
 
-![Mockaroo Screenshot](./Stage%20A/Screenshots/Mockaroo.png)
+ה-ERD מציג את הישויות הלוגיות הרעיוניות ואת הקשרים ביניהן.
 
-![Mockaroo Screenshot](./Stage%20A/Screenshots/Mockaroo_pgAdmin.png)
+![דיאגרמת ERD](./Stage%20A/ERD%20Menu%20Managment%20Department%205786.png)
 
-### ✅ Method B: Data Import (CSV)
-The `Ingredient` table was populated by importing an external `ingredients.csv` file using pgAdmin's Import tool.
+### DSD (דיאגרמת סכמת נתונים)
 
-![pgAdmin Import](./Stage%20A/Screenshots/Ingredient_csv.png)
+ה-DSD (סכמה רלציונית) מציג את מבני הטבלאות הפיזיות, כולל מפתחות ראשיים וזרים.
 
-![pgAdmin Import](./Stage%20A/Screenshots/Ingredient_csv_IMPORT.png)
-
-### ✅ Method C: Python Scripting
-A custom Python script was developed to generate high-volume data (**20,000 rows each**) for the associative and log tables.
-
-![Python Execution](./Stage%20A/Screenshots/PythonScript.png)
-
-![Python Execution](./Stage%20A/Screenshots/PythonScript_pgAdmin.png)
+![דיאגרמת DSD](./Stage%20A/DSD%20Menu%20Managment%20Department%205786-Relational%20Schema.png)
 
 ---
 
-## 💾 Backup and Recovery
-To ensure project safety and portability, a full database backup was performed and tested.
+## 🗃️ תיאור מבנה הנתונים
 
-1.  **Backup Process:** Created a compressed `.tar` archive.
+מסד הנתונים מורכב מ-**6 טבלאות** שתוכננו לטפל בכל דבר החל מארגון תפריט ברמה גבוהה ועד למדידות מרכיבים גרגוריות.
 
-![Backup Success](./Stage%20A/Screenshots/Backup.png)
+### 1. MENU_CATEGORY (קטגוריית תפריט)
 
-2.  **Restoration Test:** The backup was successfully restored into a fresh database named `DB_Test_Restore`.
+טבלה זו משמשת כמבנה הארגוני הראשי של התפריט.
 
-![Restore Verification](./Stage%20A/Screenshots/Restore.png)
+- **category_id (מפתח ראשי):** מספר שלם ייחודי עם קידום אוטומטי (Serial) המזהה כל קטגוריה.
+- **category_name (שם קטגוריה):** שם תיאורי ייחודי (למשל, 'מנות עיקריות', 'משקאות').
+  - _אילוץ:_ חייב להיות ייחודי ולהכיל לפחות 2 תווים.
+- **description (תיאור - אופציונלי):** טקסט קצר המתאר את תכולת הקטגוריה.
+
+### 2. INGREDIENT (מרכיב)
+
+מייצג את חומרי הגלם הזמינים במחסן המסעדה.
+
+- **ingredient_id (מפתח ראשי):** מזהה ייחודי לכל מרכיב גולמי.
+- **ingredient_name (שם מרכיב):** שם המרכיב (למשל, 'מלח ים', 'קמח אורגני').
+  - _אילוץ:_ חייב להיות ייחודי למניעת כפילויות במלאי.
+- **unit (יחידת מידה):** יחידת המידה הסטנדרטית עבור מרכיב זה (למשל, 'ק"ג', 'גרם', 'ליטר', 'יחידות').
+
+### 3. MENU_ITEM (פריט תפריט)
+
+הישות המרכזית של המערכת, המייצגת את המנות הנמכרות ללקוחות.
+
+- **menu_item_id (מפתח ראשי):** מזהה ייחודי לכל מנה.
+- **item_name (שם פריט):** השם המסחרי של המנה.
+  - _אילוץ:_ חייב להיות ייחודי.
+- **price (מחיר):** מחיר המכירה של הפריט.
+  - _אילוץ:_ חייב להיות גדול מ-0.
+- **description (תיאור - אופציונלי):** תיאור מסחרי להצגה בתפריט.
+- **is_available (זמין):** דגל בוליאני המציין אם המנה ניתנת להזמנה כרגע.
+- **added_date (תאריך הוספה):** התאריך שבו הפריט הוצג לראשונה בתפריט.
+  - _אילוץ:_ לא יכול להיות תאריך עתידי (<= תאריך נוכחי).
+- **calories (קלוריות - אופציונלי):** ערך קלורי כולל למידע תזונתי.
+  - _אילוץ:_ חייב להיות גדול מ-0 או שווה לו.
+- **category_id (מפתח זר):** מקשר את הפריט לקטגוריה האב שלו.
+
+### 4. RECIPE (מתכון)
+
+הרחבה של פריט התפריט המספקת נתוני בישול טכניים.
+
+- **recipe_id (מפתח ראשי):** מזהה ייחודי למתכון.
+- **instructions (הוראות):** הוראות הכנה מפורטות שלב-אחר-שלב.
+  - _אילוץ:_ חייב להכיל לפחות 10 תווים להבטחת פירוט מספק.
+- **menu_item_id (מפתח זר/ייחודי):** מקשר את המתכון לפריט תפריט אחד בדיוק, ושומר על **קשר 1:1**.
+
+### 5. RECIPE_INGREDIENT (מרכיב במתכון)
+
+טבלה אסוציאטיבית המגדירה את ההרכב הספציפי של כל מתכון. טבלה זו מאפשרת את קשר רבים-לרבים בין מתכונים למרכיבים.
+
+- **recipe_ingredient_id (מפתח ראשי):** מזהה ייחודי לכל שורה בהרכב.
+- **quantity (כמות):** הכמות המדויקת של המרכיב הנדרשת למתכון.
+  - _אילוץ:_ חייבת להיות גדולה מ-0.
+- **recipe_id (מפתח זר):** הפניה למתכון המורכב.
+- **ingredient_id (מפתח זר):** הפניה למרכיב הגולמי המשמש.
+
+### 6. MENU_CHANGE_LOG (יומן שינויי תפריט)
+
+טבלת ביקורת למעקב אחר כל השינויים המנהלתיים שנעשו בתפריט לאורך זמן.
+
+- **change_id (מפתח ראשי):** מזהה ייחודי לרשומת היומן.
+- **change_description (תיאור שינוי - אופציונלי):** הסבר על מה שהשתנה (למשל, 'עדכון מחיר', 'תיקון שם').
+- **change_date (תאריך שינוי):** חותמת זמן של מועד ביצוע השינוי.
+- **menu_item_id (מפתח זר):** הפניה לפריט התפריט הספציפי שהשתנה.
 
 ---
 
-# 🚀 STAGE B: ADVANCED QUERIES & DATA INTEGRITY
+## 🧠 החלטות עיצוב
 
-## 🔍 Comparative SELECT Queries
-*Execution of queries in two versions to analyze performance.*
+- **נרמול 3NF:** הסכמה מנורמלת במלואה לצורה הנורמלית השלישית למניעת כפילויות נתונים והבטחת שלמות.
+- **קשרים מזהים:** השתמשנו בקשרים מזהים עבור `Recipe` ו-`Log` מכיוון שאינם יכולים להתקיים ללא `Menu_Item` אב.
+- **שלמות נתונים:** יישמנו אילוצי `CHECK` על מחיר (>0), קלוריות (>=0) וכמות (>0) למניעת שגיאות הזנת נתונים לוגיות.
+- **מעקב זמני:** כללנו `added_date` ו-`change_date` לעמידה בדרישה לתכונות תאריך משמעותיות.
 
-### Query 1: Items added in 2024 with Category Names
-**What it does:** This query identifies all dishes introduced during the 2024 calendar year. It extracts the year from the `added_date` and performs a join to display the category name instead of a numeric ID.
+---
 
-**Version A (JOIN):**
+## 📥 שיטות הכנסת נתונים
+
+מסד הנתונים אוכלס ביותר מ-**41,000 רשומות** באמצעות שלוש שיטות שונות:
+
+### ✅ שיטה א': Mockaroo (סקריפטי SQL)
+
+שימש ליצירת 500 רשומות ריאליסטיות לקטגוריות, פריטי תפריט ומתכונים.
+
+![צילום מסך Mockaroo](./Stage%20A/Screenshots/Mockaroo.png)
+
+![צילום מסך Mockaroo](./Stage%20A/Screenshots/Mockaroo_pgAdmin.png)
+
+### ✅ שיטה ב': ייבוא נתונים (CSV)
+
+טבלת `Ingredient` אוכלסה על ידי ייבוא קובץ `ingredients.csv` חיצוני באמצעות כלי הייבוא של pgAdmin.
+
+![ייבוא pgAdmin](./Stage%20A/Screenshots/Ingredient_csv.png)
+
+![ייבוא pgAdmin](./Stage%20A/Screenshots/Ingredient_csv_IMPORT.png)
+
+### ✅ שיטה ג': סקריפט Python
+
+פותח סקריפט Python מותאם אישית ליצירת נתונים בנפח גבוה (**20,000 שורות כל אחד**) עבור טבלאות האסוציאציה ויומן הביקורת.
+
+![הרצת Python](./Stage%20A/Screenshots/PythonScript.png)
+
+![הרצת Python](./Stage%20A/Screenshots/PythonScript_pgAdmin.png)
+
+---
+
+## 💾 גיבוי ושחזור
+
+להבטחת בטיחות הפרויקט ונייידותו, בוצע גיבוי מלא של מסד הנתונים ונבדק.
+
+1.  **תהליך הגיבוי:** נוצר ארכיון `.tar` דחוס.
+
+![הצלחת גיבוי](./Stage%20A/Screenshots/Backup.png)
+
+2.  **בדיקת שחזור:** הגיבוי שוחזר בהצלחה למסד נתונים חדש בשם `DB_Test_Restore`.
+
+![אימות שחזור](./Stage%20A/Screenshots/Restore.png)
+
+---
+
+# 🚀 שלב ב': שאילתות מתקדמות ושלמות נתונים
+
+## 🔍 שאילתות SELECT השוואתיות
+
+_ביצוע שאילתות בשתי גרסאות לניתוח ביצועים._
+
+### שאילתה 1: פריטים שנוספו ב-2024 עם שמות קטגוריות
+
+**מה היא עושה:** שאילתה זו מזהה את כל המנות שהוצגו במהלך שנת 2024. היא מחלצת את השנה מ-`added_date` ומבצעת join להצגת שם הקטגוריה במקום מזהה מספרי.
+
+**גרסה א' (JOIN):**
+
 ```sql
 SELECT mi.item_name, mi.price, mc.category_name, EXTRACT(YEAR FROM mi.added_date) AS year_added
 FROM MENU_ITEM mi
@@ -209,25 +241,28 @@ JOIN MENU_CATEGORY mc ON mi.category_id = mc.category_id
 WHERE EXTRACT(YEAR FROM mi.added_date) = 2024;
 ```
 
-![Q1 Result](./Stage%20B/Screenshots/Select_1_VersA.png)
+![תוצאת שאילתה 1](./Stage%20B/Screenshots/Select_1_VersA.png)
 
-**Version B (Scalar Subquery):**
+**גרסה ב' (תת-שאילתה סקלרית):**
+
 ```sql
-SSELECT item_name, price, 
+SELECT item_name, price,
        (SELECT category_name FROM MENU_CATEGORY mc WHERE mc.category_id = mi.category_id) AS category_name,
        EXTRACT(YEAR FROM added_date) AS year_added
 FROM MENU_ITEM mi
 WHERE EXTRACT(YEAR FROM added_date) = 2024;
 ```
 
-![Q1 Result](./Stage%20B/Screenshots/Select_1_VersB.png)
+![תוצאת שאילתה 1](./Stage%20B/Screenshots/Select_1_VersB.png)
 
-**Efficiency Comparison:** **Version A (JOIN)** is more efficient. In PostgreSQL, a JOIN allows the optimizer to use "Hash Join" algorithms to process the tables in a single pass. Version B uses a "Scalar Subquery," which forces the engine to perform a separate lookup for every single row in the Menu Item table, causing poor performance as data volume increases.
+**השוואת יעילות:** **גרסה א' (JOIN)** יעילה יותר. ב-PostgreSQL, JOIN מאפשר למייעל להשתמש באלגוריתמי "Hash Join" לעיבוד הטבלאות במעבר אחד. גרסה ב' משתמשת ב"תת-שאילתה סקלרית", המאלצת את המנוע לבצע חיפוש נפרד לכל שורה בטבלת פריטי התפריט, מה שגורם לביצועים ירודים ככל שנפח הנתונים גדל.
 
-### Query 2: Ingredients used in more than 20 recipes
-**What it does:** This query scans the 20,000-row RECIPE_INGREDIENT table to find "high-use" ingredients that are versatile enough to be used in over 20 different dishes.
+### שאילתה 2: מרכיבים המשמשים ביותר מ-20 מתכונים
 
-**Version A (GROUP BY / HAVING):**
+**מה היא עושה:** שאילתה זו סורקת את טבלת RECIPE_INGREDIENT בת 20,000 השורות כדי למצוא מרכיבים "בשימוש גבוה" שגמישים מספיק לשימוש ביותר מ-20 מנות שונות.
+
+**גרסה א' (GROUP BY / HAVING):**
+
 ```sql
 SELECT i.ingredient_name, i.unit, COUNT(ri.recipe_id) AS total_recipes
 FROM INGREDIENT i
@@ -236,24 +271,27 @@ GROUP BY i.ingredient_name, i.unit
 HAVING COUNT(ri.recipe_id) > 20;
 ```
 
-![Q2 Result](./Stage%20B/Screenshots/Select_2_VersA.png)
+![תוצאת שאילתה 2](./Stage%20B/Screenshots/Select_2_VersA.png)
 
-**Version B (Scalar Subquery):**
+**גרסה ב' (תת-שאילתה סקלרית):**
+
 ```sql
-SELECT i.ingredient_name, i.unit, 
+SELECT i.ingredient_name, i.unit,
        (SELECT COUNT(*) FROM RECIPE_INGREDIENT ri WHERE ri.ingredient_id = i.ingredient_id) AS total_recipes
 FROM INGREDIENT i
 WHERE (SELECT COUNT(*) FROM RECIPE_INGREDIENT ri WHERE ri.ingredient_id = i.ingredient_id) > 20;
 ```
 
-![Q2 Result](./Stage%20B/Screenshots/Select_2_VersB.png)
+![תוצאת שאילתה 2](./Stage%20B/Screenshots/Select_2_VersB.png)
 
-**Efficiency Comparison:** **Version A (GROUP BY / HAVING)** is superior because it uses "Hash Aggregation," scanning the associative table only once to count all occurrences. Version B executes the count calculation twice for every row (once for the SELECT and once for the WHERE), leading to massive redundancy.
+**השוואת יעילות:** **גרסה א' (GROUP BY / HAVING)** עדיפה כי היא משתמשת ב"Hash Aggregation", סורקת את הטבלה האסוציאטיבית פעם אחת בלבד לספירת כל המופעים. גרסה ב' מבצעת חישוב הספירה פעמיים לכל שורה (פעם עבור ה-SELECT ופעם עבור ה-WHERE), מה שמוביל לכפילות עצומה.
 
-### Query 3: Items priced above their Category Average
-**What it does:** A business intelligence tool to find expensive items relative to their peers. It calculates the average price of each category and filters for dishes that exceed that value.
+### שאילתה 3: פריטים במחיר מעל הממוצע בקטגוריה שלהם
 
-**Version A (Derived Table JOIN):**
+**מה היא עושה:** כלי לניתוח עסקי למציאת פריטים יקרים יחסית לעמיתיהם. היא מחשבת את המחיר הממוצע של כל קטגוריה ומסננת מנות העולות על ערך זה.
+
+**גרסה א' (טבלה נגזרת + JOIN):**
+
 ```sql
 SELECT mi.item_name, mi.price, ROUND(sub.avg_cat_price, 2) AS category_average
 FROM MENU_ITEM mi
@@ -262,60 +300,65 @@ JOIN (SELECT category_id, AVG(price) AS avg_cat_price FROM MENU_ITEM GROUP BY ca
 WHERE mi.price > sub.avg_cat_price;
 ```
 
-![Q3 Result](./Stage%20B/Screenshots/Select_3_VersA.png)
+![תוצאת שאילתה 3](./Stage%20B/Screenshots/Select_3_VersA.png)
 
-**Version B (Scalar Subquery):**
+**גרסה ב' (תת-שאילתה סקלרית):**
+
 ```sql
-SELECT mi.item_name, mi.price, 
+SELECT mi.item_name, mi.price,
        (SELECT ROUND(AVG(price), 2) FROM MENU_ITEM mi2 WHERE mi2.category_id = mi.category_id) AS category_average
 FROM MENU_ITEM mi
 WHERE mi.price > (SELECT AVG(price) FROM MENU_ITEM mi3 WHERE mi3.category_id = mi.category_id);
 ```
 
-![Q3 Result](./Stage%20B/Screenshots/Select_3_VersB.png)
+![תוצאת שאילתה 3](./Stage%20B/Screenshots/Select_3_VersB.png)
 
-**Efficiency Comparison:** **Version A (Derived Table JOIN)** is highly efficient as it computes the average for each of the 500 categories exactly once. Version B is O(N^2) complex, as it triggers a full scan and average calculation for every single dish being compared, which is extremely inefficient.
+**השוואת יעילות:** **גרסה א' (טבלה נגזרת + JOIN)** יעילה מאוד כי היא מחשבת את הממוצע עבור כל אחת מ-500 הקטגוריות פעם אחת בדיוק. גרסה ב' בעלת מורכבות O(N²), כי היא מפעילה סריקה מלאה וחישוב ממוצע לכל מנה בנפרד, שהוא ביצועי ביותר.
 
-### Query 4: Static Items in 2026 (No modifications)
-**What it does:** This query identifies dishes that were stable and did not undergo any price or availability changes during the year 2026 by checking for a lack of log entries.
+### שאילתה 4: פריטים סטטיים ב-2026 (ללא שינויים)
 
-**Version A (NOT EXISTS):**
+**מה היא עושה:** שאילתה זו מזהה מנות שהיו יציבות ולא עברו שינויי מחיר או זמינות במהלך שנת 2026 על ידי בדיקת היעדר רשומות יומן.
+
+**גרסה א' (NOT EXISTS):**
+
 ```sql
 SELECT mi.item_name, mi.added_date, mi.price
 FROM MENU_ITEM mi
 WHERE NOT EXISTS (
-    SELECT 1 
-    FROM MENU_CHANGE_LOG mcl 
-    WHERE mcl.menu_item_id = mi.menu_item_id 
+    SELECT 1
+    FROM MENU_CHANGE_LOG mcl
+    WHERE mcl.menu_item_id = mi.menu_item_id
     AND EXTRACT(YEAR FROM mcl.change_date) = 2026
 );
 ```
 
-![Q4 Result](./Stage%20B/Screenshots/Select_4_VersA.png)
+![תוצאת שאילתה 4](./Stage%20B/Screenshots/Select_4_VersA.png)
 
-**Version B (LEFT JOIN / IS NULL):**
+**גרסה ב' (LEFT JOIN / IS NULL):**
+
 ```sql
 SELECT mi.item_name, mi.added_date, mi.price
 FROM MENU_ITEM mi
-LEFT JOIN MENU_CHANGE_LOG mcl ON mi.menu_item_id = mcl.menu_item_id 
+LEFT JOIN MENU_CHANGE_LOG mcl ON mi.menu_item_id = mcl.menu_item_id
     AND EXTRACT(YEAR FROM mcl.change_date) = 2026
 WHERE mcl.change_id IS NULL;
 ```
 
-![Q4 Result](./Stage%20B/Screenshots/Select_4_VersB.png)
+![תוצאת שאילתה 4](./Stage%20B/Screenshots/Select_4_VersB.png)
 
-**Efficiency Comparison:** **Version A (NOT EXISTS)** is faster in PostgreSQL because it uses "Anti-Join" logic. The engine stops searching for a specific item the moment it finds the first matching log for 2026. Version B must join all items with all logs first before filtering, using more memory and CPU.
+**השוואת יעילות:** **גרסה א' (NOT EXISTS)** מהירה יותר ב-PostgreSQL כי היא משתמשת בלוגיקת "Anti-Join". המנוע מפסיק לחפש פריט ספציפי ברגע שמוצאת עבורו רשומת יומן ראשונה מ-2026. גרסה ב' חייבת להצטרף לכל הפריטים עם כל הרשומות תחילה לפני הסינון, תוך שימוש בזיכרון ומעבד רב יותר.
 
 ---
 
-## 📊 Additional SELECT Queries
+## 📊 שאילתות SELECT נוספות
 
-### Query 5: Monthly Update Statistics
-**What it does:** Counts the total number of menu modifications made per month for the year 2024 to help management understand workload distribution.
+### שאילתה 5: סטטיסטיקות עדכון חודשיות
+
+**מה היא עושה:** סופרת את סך השינויים בתפריט שבוצעו בכל חודש בשנת 2024 כדי לעזור להנהלה להבין את התפלגות עומס העבודה.
 
 ```sql
-SELECT EXTRACT(MONTH FROM change_date) AS month_num, 
-       TO_CHAR(change_date, 'Month') AS month_name, 
+SELECT EXTRACT(MONTH FROM change_date) AS month_num,
+       TO_CHAR(change_date, 'Month') AS month_name,
        COUNT(*) AS updates_count
 FROM MENU_CHANGE_LOG
 WHERE EXTRACT(YEAR FROM change_date) = 2024
@@ -323,10 +366,11 @@ GROUP BY month_num, month_name
 ORDER BY month_num;
 ```
 
-![Q5 Result](./Stage%20B/Screenshots/Select_5.png)
+![תוצאת שאילתה 5](./Stage%20B/Screenshots/Select_5.png)
 
-### Query 6: Chef's Technical Sheet
-**What it does:** Joins four tables to produce a detailed cooking guide including the item name, instructions, specific ingredients, and quantities for all active low-cost dishes.
+### שאילתה 6: גיליון טכני של השף
+
+**מה היא עושה:** מחברת ארבע טבלאות להפקת מדריך בישול מפורט הכולל שם הפריט, הוראות הכנה, מרכיבים ספציפיים וכמויות עבור כל המנות הזולות הזמינות.
 
 ```sql
 SELECT mi.item_name, r.instructions, i.ingredient_name, ri.quantity, i.unit
@@ -338,14 +382,15 @@ WHERE mi.is_available = TRUE AND mi.price < 30
 ORDER BY mi.item_name;
 ```
 
-![Q6 Result](./Stage%20B/Screenshots/Select_6.png)
+![תוצאת שאילתה 6](./Stage%20B/Screenshots/Select_6.png)
 
-### Query 7: High-Calorie Category Report
-**What it does:** Ranks menu categories based on the average caloric content of their dishes, providing data for designing healthier menu options.
+### שאילתה 7: דוח קטגוריות עתירות קלוריות
+
+**מה היא עושה:** מדרגת קטגוריות תפריט לפי תכולת הקלוריות הממוצעת של המנות שלהן, ומספקת נתונים לעיצוב אפשרויות תפריט בריאותיות יותר.
 
 ```sql
-SELECT mc.category_name, 
-       ROUND(AVG(mi.calories), 0) AS avg_calories, 
+SELECT mc.category_name,
+       ROUND(AVG(mi.calories), 0) AS avg_calories,
        COUNT(mi.menu_item_id) AS total_items
 FROM MENU_CATEGORY mc
 JOIN MENU_ITEM mi ON mc.category_id = mi.category_id
@@ -356,85 +401,90 @@ ORDER BY avg_calories DESC
 LIMIT 5;
 ```
 
-![Q7 Result](./Stage%20B/Screenshots/Select_7.png)
+![תוצאת שאילתה 7](./Stage%20B/Screenshots/Select_7.png)
 
-### Query 8: Weekend Change Audit
-**What it does:** Lists all changes made during Fridays and Saturdays to monitor weekend administrative activity and ensure security compliance.
+### שאילתה 8: ביקורת שינויי סוף שבוע
+
+**מה היא עושה:** מפרטת את כל השינויים שבוצעו בימי שישי ושבת לניטור פעילות מנהלתית בסוף שבוע ועמידה בדרישות אבטחה.
 
 ```sql
-SELECT mi.item_name, mcl.change_description, 
-       TO_CHAR(mcl.change_date, 'Day') AS day_name, 
+SELECT mi.item_name, mcl.change_description,
+       TO_CHAR(mcl.change_date, 'Day') AS day_name,
        mcl.change_date
 FROM MENU_CHANGE_LOG mcl
 JOIN MENU_ITEM mi ON mcl.menu_item_id = mi.menu_item_id
-WHERE EXTRACT(DOW FROM mcl.change_date) IN (5, 6) -- 5=Friday, 6=Saturday
+WHERE EXTRACT(DOW FROM mcl.change_date) IN (5, 6) -- 5=שישי, 6=שבת
 ORDER BY mcl.change_date DESC;
 ```
 
-![Q8 Result](./Stage%20B/Screenshots/Select_8.png)
+![תוצאת שאילתה 8](./Stage%20B/Screenshots/Select_8.png)
 
 ---
 
-## 🗑️ DELETE Queries
+## 🗑️ שאילתות DELETE
 
-### Delete 1: Administrative Log Archiving
-**What it does:** Removes historical change logs older than 2 years to keep the database performance optimal and clear storage space.
+### מחיקה 1: ארכוב יומן מנהלתי
+
+**מה היא עושה:** מסירה רשומות יומן שינויים ישנות מעל שנתיים לשמירה על ביצועי מסד הנתונים ופינוי שטח אחסון.
 
 ```sql
-DELETE FROM MENU_CHANGE_LOG 
+DELETE FROM MENU_CHANGE_LOG
 WHERE change_date < CURRENT_DATE - INTERVAL '2 years';
 ```
 
-**Before:** 
+**לפני:**
 
-![D1 Before](./Stage%20B/Screenshots/Delete_1_Bef.png)
+![לפני מחיקה 1](./Stage%20B/Screenshots/Delete_1_Bef.png)
 
-**After:** 
+**אחרי:**
 
-![D1 After](./Stage%20B/Screenshots/Delete_1_Aft.png)
+![אחרי מחיקה 1](./Stage%20B/Screenshots/Delete_1_Aft.png)
 
-### Delete 2: Empty Category Cleanup
-**What it does:** Deletes any menu categories that do not contain any dishes, ensuring a tidy and logical menu structure.
+### מחיקה 2: ניקוי קטגוריות ריקות
+
+**מה היא עושה:** מוחקת קטגוריות תפריט שאינן מכילות מנות כלשהן, ומבטיחה מבנה תפריט מסודר ולוגי.
 
 ```sql
 DELETE FROM MENU_CATEGORY
 WHERE category_id NOT IN (SELECT DISTINCT category_id FROM MENU_ITEM);
 ```
 
-**Before:** 
+**לפני:**
 
-![D2 Before](./Stage%20B/Screenshots/Delete_2_Bef.png)
+![לפני מחיקה 2](./Stage%20B/Screenshots/Delete_2_Bef.png)
 
-**After:** 
+**אחרי:**
 
-![D2 After](./Stage%20B/Screenshots/Delete_2_Aft.png)
+![אחרי מחיקה 2](./Stage%20B/Screenshots/Delete_2_Aft.png)
 
-### Delete 3: Recipe Ingredient Simplification
-**What it does:** Removes ingredient lines from recipes where the required quantity is less than 0.005, simplifying technical sheets for the kitchen staff.
+### מחיקה 3: פישוט מרכיבי מתכון
+
+**מה היא עושה:** מסירה שורות מרכיבים ממתכונים שבהן הכמות הנדרשת קטנה מ-0.005, ומפשטת גיליונות טכניים לצוות המטבח.
 
 ```sql
 DELETE FROM RECIPE_INGREDIENT
 WHERE quantity < 0.005;
 ```
 
-**Before:** 
+**לפני:**
 
-![D3 Before](./Stage%20B/Screenshots/Delete_3_Bef.png)
+![לפני מחיקה 3](./Stage%20B/Screenshots/Delete_3_Bef.png)
 
-**After:** 
+**אחרי:**
 
-![D3 After](./Stage%20B/Screenshots/Delete_3_Aft.png)
+![אחרי מחיקה 3](./Stage%20B/Screenshots/Delete_3_Aft.png)
 
-## ✏️ UPDATE Queries
+## ✏️ שאילתות UPDATE
 
-### Update 1: Beef Price Inflation Adjustment
-**What it does:** Increases the price by 12% for all dishes that contain "Beef" as an ingredient in their recipe, responding to market cost fluctuations.
+### עדכון 1: התאמת מחיר בגין אינפלציה בבקר
+
+**מה היא עושה:** מעלה את המחיר ב-12% עבור כל המנות המכילות "בקר" כמרכיב במתכון שלהן, בתגובה לתנודות בעלויות השוק.
 
 ```sql
-UPDATE MENU_ITEM 
+UPDATE MENU_ITEM
 SET price = price * 1.12
 WHERE menu_item_id IN (
-    SELECT r.menu_item_id 
+    SELECT r.menu_item_id
     FROM RECIPE r
     JOIN RECIPE_INGREDIENT ri ON r.recipe_id = ri.recipe_id
     JOIN INGREDIENT i ON ri.ingredient_id = i.ingredient_id
@@ -442,16 +492,17 @@ WHERE menu_item_id IN (
 );
 ```
 
-**Before:** 
+**לפני:**
 
-![U1 Before](./Stage%20B/Screenshots/Update_1_Bef.png)
+![לפני עדכון 1](./Stage%20B/Screenshots/Update_1_Bef.png)
 
-**After:** 
+**אחרי:**
 
-![U1 After](./Stage%20B/Screenshots/Update_1_Aft.png)
+![אחרי עדכון 1](./Stage%20B/Screenshots/Update_1_Aft.png)
 
-### Update 2: Seasonal BBQ Availability Cleanup
-**What it does:** Sets is_available to False for all items in the BBQ category that have not been updated for over 2 years.
+### עדכון 2: ניקוי עונתי של זמינות BBQ
+
+**מה היא עושה:** מגדיר is_available לערך False עבור כל הפריטים בקטגוריית BBQ שלא עודכנו למעלה משנתיים.
 
 ```sql
 UPDATE MENU_ITEM
@@ -460,204 +511,212 @@ WHERE category_id IN (SELECT category_id FROM MENU_CATEGORY WHERE category_name 
 AND added_date < CURRENT_DATE - INTERVAL '2 years';
 ```
 
-**Before:** 
+**לפני:**
 
-![U2 Before](./Stage%20B/Screenshots/Update_2_Bef.png)
+![לפני עדכון 2](./Stage%20B/Screenshots/Update_2_Bef.png)
 
-**After:** 
+**אחרי:**
 
-![U2 After](./Stage%20B/Screenshots/Update_2_Aft.png)
+![אחרי עדכון 2](./Stage%20B/Screenshots/Update_2_Aft.png)
 
-### Update 3: Morning Log Description Normalization
-**What it does:** Automatically fills empty log descriptions with a standard "Morning system check" note for all updates performed before 10:00 AM.
+### עדכון 3: נרמול תיאורי יומן בוקר
+
+**מה היא עושה:** ממלא אוטומטית תיאורי יומן ריקים בהערת "בדיקת מערכת בוקר שגרתית" סטנדרטית עבור כל העדכונים שבוצעו לפני 10:00 בבוקר.
 
 ```sql
 UPDATE MENU_CHANGE_LOG
 SET change_description = 'Routine morning system check'
-WHERE change_description IS NULL 
+WHERE change_description IS NULL
 AND EXTRACT(HOUR FROM change_date) < 10;
 ```
 
-**Before:** 
+**לפני:**
 
-![U3 Before](./Stage%20B/Screenshots/Update_3_Bef.png)
+![לפני עדכון 3](./Stage%20B/Screenshots/Update_3_Bef.png)
 
-**After:** 
+**אחרי:**
 
-![U3 After](./Stage%20B/Screenshots/Update_3_Aft.png)
+![אחרי עדכון 3](./Stage%20B/Screenshots/Update_3_Aft.png)
 
 ---
 
-## 🛡️ Database Constraints & Alterations
+## 🛡️ אילוצי מסד הנתונים ושינויים
 
-### Constraint 1: Standardized Measurement Units
-**What it does:** Uses ALTER TABLE to restrict the unit column in the Ingredient table to a pre-defined list of culinary units (kg, g, ml, etc.), preventing data entry typos.
+### אילוץ 1: יחידות מידה סטנדרטיות
+
+**מה הוא עושה:** משתמש ב-ALTER TABLE להגבלת עמודת ה-unit בטבלת Ingredient לרשימה מוגדרת מראש של יחידות קולינריות (ק"ג, גרם, מ"ל וכו'), ומונע שגיאות הקלדה בהזנת נתונים.
 
 ```sql
-ALTER TABLE INGREDIENT ADD CONSTRAINT check_unit_standard CHECK (unit IN ('kg', 'grams', 'ml', 'liters', 'pieces', 'oz'));
+ALTER TABLE INGREDIENT ADD CONSTRAINT check_unit_standard
+CHECK (unit IN ('kg', 'grams', 'ml', 'liters', 'pieces', 'oz'));
 ```
 
-**Violation Test:** 
+**בדיקת הפרה:**
 
 ```sql
-INSERT INTO INGREDIENT (ingredient_name, unit) 
+INSERT INTO INGREDIENT (ingredient_name, unit)
 VALUES ('Test Ingredient', 'box');
 ```
 
-![C1 Error](./Stage%20B/Screenshots/New_Constraint_1.png)
+![שגיאת אילוץ 1](./Stage%20B/Screenshots/New_Constraint_1.png)
 
-### Constraint 2: Price Safety Cap ($500)
-**What it does:** Implements a price ceiling of $500 for any menu item to prevent catastrophic typing errors (e.g., $1000 instead of $10.00).
+### אילוץ 2: תקרת מחיר בטיחותית (500$)
+
+**מה הוא עושה:** מיישם תקרת מחיר של $500 לכל פריט תפריט למניעת שגיאות הקלדה קטסטרופליות (למשל, $1000 במקום $10.00).
 
 ```sql
 ALTER TABLE MENU_ITEM ADD CONSTRAINT check_max_price CHECK (price < 500);
 ```
 
-**Violation Test:** 
+**בדיקת הפרה:**
 
 ```sql
-INSERT INTO MENU_ITEM (item_name, price, is_available, added_date, category_id) 
+INSERT INTO MENU_ITEM (item_name, price, is_available, added_date, category_id)
 VALUES ('Gold Burger', 650.00, TRUE, CURRENT_DATE, 1);
 ```
 
-![C2 Error](./Stage%20B/Screenshots/New_Constraint_2.png)
+![שגיאת אילוץ 2](./Stage%20B/Screenshots/New_Constraint_2.png)
 
-### Constraint 3: Minimum Item Name Length
-**What it does:** Ensures that every dish name in the `MENU_ITEM` table consists of at least 3 characters. This prevents the entry of non-descriptive placeholders (like "A" or "TBD") and maintains a professional-looking customer menu.
+### אילוץ 3: אורך מינימלי לשם פריט
+
+**מה הוא עושה:** מבטיח שכל שם מנה בטבלת `MENU_ITEM` מורכב מלפחות 3 תווים. זה מונע הזנת מציני מקום לא תיאוריים (כמו "א" או "TBD") ושומר על תפריט לקוחות מקצועי.
 
 ```sql
 ALTER TABLE MENU_ITEM ADD CONSTRAINT check_item_name_length CHECK (LENGTH(item_name) >= 3);
 ```
 
-**Violation Test:** 
+**בדיקת הפרה:**
 
 ```sql
-INSERT INTO MENU_ITEM (item_name, price, is_available, added_date, category_id) 
+INSERT INTO MENU_ITEM (item_name, price, is_available, added_date, category_id)
 VALUES ('A', 15.00, TRUE, CURRENT_DATE, 1);
 ```
 
-![C3 Error](./Stage%20B/Screenshots/New_Constraint_3.png)
+![שגיאת אילוץ 3](./Stage%20B/Screenshots/New_Constraint_3.png)
 
-### Constraint 4: Historical Log Date Validation
-**What it does:** Validates that no entry in the `MENU_CHANGE_LOG` is dated prior to January 1st, 2020 (the system's launch year). This maintains historical integrity by preventing logs from being accidentally backdated to impossible years.
+### אילוץ 4: אימות תאריך יומן היסטורי
+
+**מה הוא עושה:** מאמת שאף רשומה ב-`MENU_CHANGE_LOG` אינה מתוארכת לפני ה-1 בינואר 2020 (שנת השקת המערכת). זה שומר על שלמות היסטורית על ידי מניעת רישום יומנים עם תאריכים בלתי אפשריים בטעות.
 
 ```sql
-ALTER TABLE MENU_CHANGE_LOG ADD CONSTRAINT check_valid_log_date CHECK (change_date >= '2020-01-01');
+ALTER TABLE MENU_CHANGE_LOG ADD CONSTRAINT check_valid_log_date
+CHECK (change_date >= '2020-01-01');
 ```
 
-**Violation Test:** 
+**בדיקת הפרה:**
 
 ```sql
-INSERT INTO MENU_CHANGE_LOG (change_description, change_date, menu_item_id) 
+INSERT INTO MENU_CHANGE_LOG (change_description, change_date, menu_item_id)
 VALUES ('Legacy change', '1995-01-01', 1);
 ```
 
-![C4 Error](./Stage%20B/Screenshots/New_Constraint_4.png)
+![שגיאת אילוץ 4](./Stage%20B/Screenshots/New_Constraint_4.png)
 
 ---
 
-## 🔄 Transaction Control (Rollback & Commit)
+## 🔄 בקרת טרנזקציות (Rollback & Commit)
 
-### 🔙 Rollback Transaction
-**What it does:** Demonstrates the use of the ROLLBACK command to undo changes made during a transaction. This ensures data integrity by allowing users to discard erroneous or unwanted modifications before they are permanently saved to the database. Our example : Simulates an administrator error - accidental $50 increase menu-wide.
+### 🔙 טרנזקציית ROLLBACK
+
+**מה היא עושה:** מדגימה את השימוש בפקודת ROLLBACK לביטול שינויים שבוצעו במהלך טרנזקציה. זה מבטיח שלמות נתונים על ידי מתן אפשרות למשתמשים להשליך שינויים שגויים או לא רצויים לפני שנשמרים לצמיתות במסד הנתונים. הדוגמה שלנו: סימולציה של שגיאת מנהל - עלייה בלתי מכוונת של $50 בכל התפריט.
 
 ```sql
--- Step 1: Baseline check - View the original prices of the first 5 items
-SELECT menu_item_id, item_name, price 
-FROM MENU_ITEM 
-ORDER BY menu_item_id 
+-- שלב 1: בדיקת בסיס - צפייה במחירים המקוריים של 5 הפריטים הראשונים
+SELECT menu_item_id, item_name, price
+FROM MENU_ITEM
+ORDER BY menu_item_id
 LIMIT 5;
 
--- Step 2: Start the transaction
+-- שלב 2: התחלת הטרנזקציה
 BEGIN;
 
--- Step 3: Simulate the error (Unintended price increase)
-UPDATE MENU_ITEM 
+-- שלב 3: סימולציית השגיאה (עלייה בלתי מכוונת במחיר)
+UPDATE MENU_ITEM
 SET price = price + 50;
 
--- Step 4: Verification of the "Modified" state
--- The prices are now inflated.
-SELECT menu_item_id, item_name, price 
-FROM MENU_ITEM 
-ORDER BY menu_item_id 
+-- שלב 4: אימות המצב "המשונה"
+-- המחירים כעת מנופחים.
+SELECT menu_item_id, item_name, price
+FROM MENU_ITEM
+ORDER BY menu_item_id
 LIMIT 5;
 
--- Step 5: Cancel the transaction and undo the changes
+-- שלב 5: ביטול הטרנזקציה והחזרת השינויים
 ROLLBACK;
 
--- Step 6: Final verification - Check that prices returned to their original values
-SELECT menu_item_id, item_name, price 
-FROM MENU_ITEM 
-ORDER BY menu_item_id 
+-- שלב 6: אימות סופי - בדיקה שהמחירים חזרו לערכיהם המקוריים
+SELECT menu_item_id, item_name, price
+FROM MENU_ITEM
+ORDER BY menu_item_id
 LIMIT 5;
 ```
 
-**Original State:** - *Prices are normal.*
+**מצב מקורי:** - _המחירים תקינים._
 
-![Rollback Proof](./Stage%20B/Screenshots/Rollback_1.png)
+![הוכחת Rollback](./Stage%20B/Screenshots/Rollback_1.png)
 
-**State after UPDATE (before ROLLBACK):** - *Prices are inflated.*
+**מצב לאחר UPDATE (לפני ROLLBACK):** - _המחירים מנופחים._
 
-![Rollback Proof](./Stage%20B/Screenshots/Rollback_2.png)
+![הוכחת Rollback](./Stage%20B/Screenshots/Rollback_2.png)
 
-**After ROLLBACK:** - *Prices are back to normal.*
+**לאחר ROLLBACK:** - _המחירים חזרו לנורמה._
 
-![Rollback Proof](./Stage%20B/Screenshots/Rollback_3.png)
+![הוכחת Rollback](./Stage%20B/Screenshots/Rollback_3.png)
 
-### ✅ Commit Transaction
-**What it does:** Demonstrates the use of the COMMIT command to save changes made during a transaction to the database. This ensures data integrity by allowing users to save erroneous or unwanted modifications before they are permanently saved to the database. Our example : Management applies a permanent +100 calorie adjustment for nutritional updates.
+### ✅ טרנזקציית COMMIT
+
+**מה היא עושה:** מדגימה את השימוש בפקודת COMMIT לשמירת שינויים שבוצעו במהלך טרנזקציה במסד הנתונים. הדוגמה שלנו: ההנהלה מיישמת התאמת +100 קלוריות קבועה לעדכונים תזונתיים.
 
 ```sql
--- Step 1: Baseline check - View current calorie counts for the first 5 items
-SELECT menu_item_id, item_name, calories 
-FROM MENU_ITEM 
+-- שלב 1: בדיקת בסיס - צפייה בספירות קלוריות הנוכחיות של 5 הפריטים הראשונים
+SELECT menu_item_id, item_name, calories
+FROM MENU_ITEM
 WHERE calories IS NOT NULL
-ORDER BY menu_item_id 
+ORDER BY menu_item_id
 LIMIT 5;
 
--- Step 2: Start the transaction
+-- שלב 2: התחלת הטרנזקציה
 BEGIN;
 
--- Step 3: Apply the update (Nutritional adjustment)
--- We increase calories by 100 for all items that have a calorie value recorded
-UPDATE MENU_ITEM 
+-- שלב 3: החלת העדכון (התאמה תזונתית)
+UPDATE MENU_ITEM
 SET calories = calories + 100
 WHERE calories IS NOT NULL;
 
--- Step 4: Verification of the "Modified" state within the transaction
--- Calorie counts should now be 100 units higher than in Step 1
-SELECT menu_item_id, item_name, calories 
-FROM MENU_ITEM 
+-- שלב 4: אימות המצב "המשונה" בתוך הטרנזקציה
+SELECT menu_item_id, item_name, calories
+FROM MENU_ITEM
 WHERE calories IS NOT NULL
-ORDER BY menu_item_id 
+ORDER BY menu_item_id
 LIMIT 5;
 
--- Step 5: Save the changes permanently to the database
+-- שלב 5: שמירת השינויים לצמיתות במסד הנתונים
 COMMIT;
 
--- Step 6: Final verification - Confirm that the +100 calorie adjustment persists
-SELECT menu_item_id, item_name, calories 
-FROM MENU_ITEM 
+-- שלב 6: אימות סופי - אישור שהתאמת +100 הקלוריות נשמרת
+SELECT menu_item_id, item_name, calories
+FROM MENU_ITEM
 WHERE calories IS NOT NULL
-ORDER BY menu_item_id 
-LIMIT 5;    
+ORDER BY menu_item_id
+LIMIT 5;
 ```
 
-**Original State:** - *Calorie counts are normal.*
+**מצב מקורי:** - _ספירות קלוריות תקינות._
 
-![Commit Proof](./Stage%20B/Screenshots/Commit_1.png)
+![הוכחת Commit](./Stage%20B/Screenshots/Commit_1.png)
 
-**State after UPDATE (before COMMIT):** - *Calorie counts are inflated.*
+**מצב לאחר UPDATE (לפני COMMIT):** - _ספירות קלוריות מוגדלות._
 
-![Commit Proof](./Stage%20B/Screenshots/Commit_2.png)
+![הוכחת Commit](./Stage%20B/Screenshots/Commit_2.png)
 
-**After COMMIT:** - *The changes are saved permanently to the database.*
+**לאחר COMMIT:** - _השינויים נשמרו לצמיתות במסד הנתונים._
 
-![Commit Proof](./Stage%20B/Screenshots/Commit_3.png)
+![הוכחת Commit](./Stage%20B/Screenshots/Commit_3.png)
 
 ---
 
-## 💾 Backup and Recovery - Stage B
-Final stage backup in `.tar` format.
+## 💾 גיבוי ושחזור - שלב ב'
 
-![Backup 2](./Stage%20B/Screenshots/Backup2.png)
+גיבוי סופי של השלב בפורמט `.tar`.
+
+![גיבוי 2](./Stage%20B/Screenshots/Backup2.png)
