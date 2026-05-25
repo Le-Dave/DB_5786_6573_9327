@@ -48,6 +48,16 @@
 20. [מבטים](#-מבטים)
 21. [גיבוי - שלב ג'](#-גיבוי---שלב-ג)
 
+### שלב ד': תכנות (PL/pgSQL)
+
+22. [סקירת התכנות](#-סקירת-התכנות)
+23. [שינוי טבלאות - AlterTable](#-שינוי-טבלאות---altertable)
+24. [פונקציות](#-פונקציות)
+25. [פרוצדורות](#-פרוצדורות)
+26. [טריגרים](#-טריגרים)
+27. [תוכניות ראשיות](#-תוכניות-ראשיות)
+28. [גיבוי - שלב ד'](#-גיבוי---שלב-ד)
+
 ---
 
 # 🏁 שלב א': עיצוב מסד הנתונים והבסיס
@@ -1019,3 +1029,357 @@ docker exec PostgreSQL_DB pg_dump -U MyUser -d DB5786David -F t -f /tmp/backup3.
 ```
 
 ![גיבוי 3](./Stage%20C/Screenshots/Backup3.png)
+
+---
+
+# 🧬 שלב ד': תכנות (PL/pgSQL)
+
+## 💡 סקירת התכנות
+
+בשלב זה כתבנו תוכניות PL/pgSQL על בסיס הנתונים **המורחב** (12 הטבלאות משלב ג'). נכתבו **2 פונקציות, 2 פרוצדורות, 2 טריגרים (אחד לפחות על UPDATE) ו-2 תוכניות ראשיות** המזמנות כל אחת פונקציה ופרוצדורה. התוכניות מנצלות את גשר האינטגרציה (`food_prep_log.menu_item_id → menu_item`) ומשלבות את כל אלמנטי התכנות הנדרשים: **קורסור implicit ו-explicit, החזרת Ref Cursor, פקודות DML, הסתעפויות, לולאות, חריגות (Exception) ורשומות (Records)**.
+
+| קובץ | סוג | אלמנטים עיקריים |
+|---|---|---|
+| `fn_menu_item_kitchen_stats.sql` | פונקציה | Record, implicit cursor, הסתעפות, Exception |
+| `fn_get_chef_preparations.sql` | פונקציה | Ref Cursor, Exception |
+| `sp_apply_category_price_increase.sql` | פרוצדורה | DML (UPDATE), הסתעפות, Exception |
+| `sp_archive_old_prep_logs.sql` | פרוצדורה | Explicit cursor, לולאה, DML (DELETE), Exception |
+| `trg_log_price_change.sql` | טריגר (UPDATE) | DML (INSERT), הסתעפות, OLD/NEW |
+| `trg_maintain_times_prepared.sql` | טריגר (INSERT/DELETE) | הסתעפות TG_OP, DML (UPDATE) |
+| `main_program_1.sql` | תוכנית ראשית | מזמנת פרוצדורה + פונקציה |
+| `main_program_2.sql` | תוכנית ראשית | מזמנת פרוצדורה + פונקציה (Ref Cursor) |
+
+---
+
+## 🔧 שינוי טבלאות - AlterTable
+
+לצורך התוכניות הוספנו עמודת מונה `times_prepared` לטבלת `menu_item`, המתוחזקת אוטומטית על ידי הטריגר `trg_maintain_times_prepared`. כל השינויים נשמרו בקובץ `AlterTable.sql`:
+
+```sql
+ALTER TABLE menu_item ADD COLUMN IF NOT EXISTS times_prepared INTEGER NOT NULL DEFAULT 0;
+
+UPDATE menu_item mi
+SET times_prepared = COALESCE((SELECT COUNT(*) FROM food_prep_log f
+                               WHERE f.menu_item_id = mi.menu_item_id), 0);
+
+ALTER TABLE menu_item ADD CONSTRAINT chk_times_prepared_non_negative CHECK (times_prepared >= 0);
+```
+
+הרצה: `ALTER TABLE` + `UPDATE 500` (אכלוס המונה לכל 500 הפריטים).
+
+---
+
+## ⚙️ פונקציות
+
+### פונקציה 1 — `fn_menu_item_kitchen_stats(p_menu_item_id)`
+
+**תיאור:** עבור פריט תפריט נתון, מחזירה "כרטיס" המשלב נתוני תפריט (שם, קטגוריה, מחיר) עם נתוני מטבח (כמה פעמים הוכן, זמן הכנה ממוצע) ותווית פופולריות מחושבת. משתמשת ב-**Record**, ב-**implicit cursor** (SELECT INTO), ב-**הסתעפות** לקביעת הפופולריות, וזורקת **Exception** אם הפריט אינו קיים.
+
+```sql
+CREATE OR REPLACE FUNCTION fn_menu_item_kitchen_stats(p_menu_item_id INTEGER)
+RETURNS TABLE (item_name VARCHAR, category_name VARCHAR, price NUMERIC,
+               times_prepared INTEGER, avg_prep_time NUMERIC, popularity_label TEXT)
+LANGUAGE plpgsql AS $$
+DECLARE rec RECORD; v_label TEXT;
+BEGIN
+    SELECT mi.item_name, mc.category_name, mi.price, mi.times_prepared,
+           ROUND(AVG(f.preparation_time), 1) AS avg_pt
+    INTO rec
+    FROM menu_item mi
+    JOIN menu_category mc ON mi.category_id = mc.category_id
+    LEFT JOIN food_prep_log f ON f.menu_item_id = mi.menu_item_id
+    WHERE mi.menu_item_id = p_menu_item_id
+    GROUP BY mi.item_name, mc.category_name, mi.price, mi.times_prepared;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Menu item % does not exist', p_menu_item_id;
+    END IF;
+
+    IF rec.times_prepared = 0 THEN v_label := 'Never prepared';
+    ELSIF rec.times_prepared < 100 THEN v_label := 'Low';
+    ELSIF rec.times_prepared < 200 THEN v_label := 'Medium';
+    ELSE v_label := 'High'; END IF;
+
+    RETURN QUERY SELECT rec.item_name, rec.category_name, rec.price,
+                        rec.times_prepared, rec.avg_pt, v_label;
+END; $$;
+```
+
+**הוכחת הרצה — קריאה תקינה:**
+```text
+SELECT * FROM fn_menu_item_kitchen_stats(1);
+
+         item_name         |   category_name   | price  | times_prepared | avg_prep_time | popularity_label
+---------------------------+-------------------+--------+----------------+---------------+------------------
+ Table Cloth 90x90 White 1 | Dips & Spreads 68 | 107.77 |            209 |          58.7 | High
+```
+
+**הוכחת הרצה — זריקת חריגה (פריט לא קיים):**
+```text
+SELECT * FROM fn_menu_item_kitchen_stats(999999);
+
+ERROR:  Menu item 999999 does not exist
+CONTEXT: PL/pgSQL function fn_menu_item_kitchen_stats(integer) line 21 at RAISE
+```
+
+### פונקציה 2 — `fn_get_chef_preparations(p_chef_id)`
+
+**תיאור:** מחזירה **Ref Cursor** על כל ההכנות שתועדו על ידי טבח נתון, מועשר בשמות המנות (גשר מטבח↔תפריט). זורקת **Exception** אם הטבח אינו קיים.
+
+```sql
+CREATE OR REPLACE FUNCTION fn_get_chef_preparations(p_chef_id INTEGER)
+RETURNS refcursor
+LANGUAGE plpgsql AS $$
+DECLARE v_exists BOOLEAN; v_cursor refcursor := 'chef_prep_cursor';
+BEGIN
+    SELECT EXISTS (SELECT 1 FROM chef WHERE chef_id = p_chef_id) INTO v_exists;
+    IF NOT v_exists THEN
+        RAISE EXCEPTION 'Chef % does not exist', p_chef_id;
+    END IF;
+
+    OPEN v_cursor FOR
+        SELECT f.log_id, mi.item_name, f.preparation_time, f.prep_date
+        FROM food_prep_log f
+        JOIN menu_item mi ON mi.menu_item_id = f.menu_item_id
+        WHERE f.chef_id = p_chef_id
+        ORDER BY f.prep_date DESC;
+    RETURN v_cursor;
+END; $$;
+```
+
+**הוכחת הרצה (באותה טרנזקציה):**
+```text
+BEGIN;
+SELECT fn_get_chef_preparations(1);   -- מחזיר 'chef_prep_cursor'
+FETCH 5 IN chef_prep_cursor;
+
+ log_id |            item_name            | preparation_time | prep_date
+--------+---------------------------------+------------------+------------
+  14504 | Milk - Condensed 34             |               58 | 2026-02-27
+  13411 | Chinese Foods - Chicken Wing 23 |               38 | 2026-02-26
+  17259 | Sauce - Soya, Light 87          |                6 | 2026-02-25
+  12822 | Sardines 55                     |               80 | 2026-02-25
+   9220 | Bread - Bagels, Plain 52        |               97 | 2026-02-25
+```
+
+---
+
+## ⚙️ פרוצדורות
+
+### פרוצדורה 1 — `sp_apply_category_price_increase(p_category_id, p_percent)`
+
+**תיאור:** מעלה את מחירי כל פריטי קטגוריה נתונה באחוז מסוים. כוללת **ולידציה + הסתעפות + Exception** (אחוז לא תקין / קטגוריה לא קיימת), פקודת **DML (UPDATE)**, ומדווחת כמה שורות עודכנו. כל עדכון מחיר מפעיל גם את הטריגר `trg_log_price_change`.
+
+```sql
+CREATE OR REPLACE PROCEDURE sp_apply_category_price_increase(
+    p_category_id INTEGER, p_percent NUMERIC)
+LANGUAGE plpgsql AS $$
+DECLARE v_cat_name VARCHAR; v_count INTEGER;
+BEGIN
+    IF p_percent <= 0 OR p_percent > 100 THEN
+        RAISE EXCEPTION 'Invalid percent %, must be between 0 and 100', p_percent;
+    END IF;
+    SELECT category_name INTO v_cat_name FROM menu_category WHERE category_id = p_category_id;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Category % does not exist', p_category_id;
+    END IF;
+    UPDATE menu_item SET price = ROUND(price * (1 + p_percent / 100.0), 2)
+    WHERE category_id = p_category_id;
+    GET DIAGNOSTICS v_count = ROW_COUNT;
+    RAISE NOTICE 'Applied % percent increase to % item(s) in category "%"',
+                 p_percent, v_count, v_cat_name;
+END; $$;
+```
+
+**הוכחת הרצה (כולל הוכחת הטריגר `trg_log_price_change` שנכנס לפעולה):**
+```text
+CALL sp_apply_category_price_increase(68, 10);
+NOTICE:  Applied 10 percent increase to 3 item(s) in category "Dips & Spreads 68"
+
+SELECT change_description FROM menu_change_log WHERE menu_item_id=1 ORDER BY change_id DESC LIMIT 2;
+          change_description
+--------------------------------------
+ Price changed from 107.77 to 118.55     <-- נוצר אוטומטית על ידי הטריגר
+ Changed display name on digital menu
+```
+
+### פרוצדורה 2 — `sp_archive_old_prep_logs(p_cutoff_date)`
+
+**תיאור:** מוחקת (מארכבת) את כל רשומות `food_prep_log` הישנות מתאריך חתך, באמצעות **קורסור explicit** המוגדר `FOR UPDATE`, **לולאה**, ופקודת **DML (DELETE ... WHERE CURRENT OF)**. כוללת **Exception block** עם re-raise. כל מחיקה מפעילה את הטריגר `trg_maintain_times_prepared`.
+
+```sql
+CREATE OR REPLACE PROCEDURE sp_archive_old_prep_logs(p_cutoff_date DATE)
+LANGUAGE plpgsql AS $$
+DECLARE
+    cur_old CURSOR FOR
+        SELECT log_id, menu_item_id, prep_date FROM food_prep_log
+        WHERE prep_date < p_cutoff_date FOR UPDATE;
+    rec RECORD; v_deleted INTEGER := 0;
+BEGIN
+    IF p_cutoff_date > CURRENT_DATE THEN
+        RAISE EXCEPTION 'Cutoff date % cannot be in the future', p_cutoff_date;
+    END IF;
+    OPEN cur_old;
+    LOOP
+        FETCH cur_old INTO rec;
+        EXIT WHEN NOT FOUND;
+        DELETE FROM food_prep_log WHERE CURRENT OF cur_old;
+        v_deleted := v_deleted + 1;
+    END LOOP;
+    CLOSE cur_old;
+    RAISE NOTICE 'Archived (deleted) % preparation log(s) older than %', v_deleted, p_cutoff_date;
+EXCEPTION WHEN OTHERS THEN
+    RAISE NOTICE 'Error during archive: %', SQLERRM;
+    RAISE;
+END; $$;
+```
+
+**הוכחת הרצה (בתוך טרנזקציה עם ROLLBACK כדי לא לפגוע בנתונים):**
+```text
+BEGIN;
+CALL sp_archive_old_prep_logs(DATE '2025-02-01');
+NOTICE:  Archived (deleted) 1459 preparation log(s) older than 2025-02-01
+ROLLBACK;
+```
+
+---
+
+## ⚡ טריגרים
+
+### טריגר 1 — `trg_log_price_change` (AFTER UPDATE על `menu_item`)
+
+**תיאור:** טריגר החובה על UPDATE. בכל פעם שמחיר פריט תפריט מתעדכן, נרשמת אוטומטית שורת תיעוד ב-`menu_change_log` (מחיר ישן → חדש). משתמש ב-**הסתעפות** (רק כשהמחיר באמת השתנה), ב-**OLD/NEW**, ובפקודת **DML (INSERT)**.
+
+```sql
+CREATE OR REPLACE FUNCTION trg_fn_log_price_change()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+    IF NEW.price IS DISTINCT FROM OLD.price THEN
+        INSERT INTO menu_change_log (change_description, change_date, menu_item_id)
+        VALUES (format('Price changed from %s to %s', OLD.price, NEW.price),
+                CURRENT_TIMESTAMP, NEW.menu_item_id);
+    END IF;
+    RETURN NEW;
+END; $$;
+
+CREATE TRIGGER trg_log_price_change AFTER UPDATE ON menu_item
+FOR EACH ROW EXECUTE FUNCTION trg_fn_log_price_change();
+```
+
+**הוכחת הרצה:** ראו את פלט פרוצדורה 1 לעיל — לאחר עדכון המחיר, נוצרה אוטומטית הרשומה `Price changed from 107.77 to 118.55` בטבלת `menu_change_log`. אימות במסד הנתונים (pgAdmin): השורה החדשה (`change_id 20005`) נוצרה על ידי הטריגר עם תאריך היום, ללא כתיבה ידנית.
+
+![הוכחת הטריגר - לוג שינוי מחיר אוטומטי](./Stage%20D/Screenshots/picture_2.png)
+
+### טריגר 2 — `trg_maintain_times_prepared` (AFTER INSERT/DELETE על `food_prep_log`)
+
+**תיאור:** מתחזק את המונה `menu_item.times_prepared` בסנכרון עם יומן המטבח: הכנה חדשה → 1+ ; מחיקת רשומה → 1-. משתמש ב-**הסתעפות על `TG_OP`** ובפקודת **DML (UPDATE)**.
+
+```sql
+CREATE OR REPLACE FUNCTION trg_fn_maintain_times_prepared()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        UPDATE menu_item SET times_prepared = times_prepared + 1
+        WHERE menu_item_id = NEW.menu_item_id;
+        RETURN NEW;
+    ELSIF TG_OP = 'DELETE' THEN
+        UPDATE menu_item SET times_prepared = times_prepared - 1
+        WHERE menu_item_id = OLD.menu_item_id;
+        RETURN OLD;
+    END IF;
+    RETURN NULL;
+END; $$;
+
+CREATE TRIGGER trg_maintain_times_prepared AFTER INSERT OR DELETE ON food_prep_log
+FOR EACH ROW EXECUTE FUNCTION trg_fn_maintain_times_prepared();
+```
+
+**הוכחת הרצה (INSERT מגדיל את המונה, ואז ROLLBACK):**
+```text
+BEGIN;
+SELECT times_prepared AS avant FROM menu_item WHERE menu_item_id=1;   -->  209
+INSERT INTO food_prep_log (chef_id, menu_item_id, preparation_time, prep_date)
+VALUES (1,1,30,CURRENT_DATE);
+SELECT times_prepared AS apres FROM menu_item WHERE menu_item_id=1;    -->  210
+ROLLBACK;
+```
+
+---
+
+## 🚀 תוכניות ראשיות
+
+### תוכנית ראשית 1 — `main_program_1.sql`
+
+**תיאור:** מזמנת **פרוצדורה אחת + פונקציה אחת**: קודם `sp_apply_category_price_increase` (העלאת מחירי הקטגוריה של פריט 1 ב-10%), ואז `fn_menu_item_kitchen_stats` להצגת הכרטיס המעודכן של פריט 1.
+
+```sql
+DO $$
+DECLARE v_item_id INTEGER := 1; v_cat_id INTEGER; rec RECORD;
+BEGIN
+    SELECT category_id INTO v_cat_id FROM menu_item WHERE menu_item_id = v_item_id;
+    RAISE NOTICE '=== MAIN PROGRAM 1 : item % (category %) ===', v_item_id, v_cat_id;
+    CALL sp_apply_category_price_increase(v_cat_id, 10);
+    FOR rec IN SELECT * FROM fn_menu_item_kitchen_stats(v_item_id) LOOP
+        RAISE NOTICE 'Item: % | Category: % | Price: % | Prepared % time(s) | Avg time: % | Popularity: %',
+            rec.item_name, rec.category_name, rec.price, rec.times_prepared, rec.avg_prep_time, rec.popularity_label;
+    END LOOP;
+END; $$;
+```
+
+**הוכחת הרצה:**
+```text
+NOTICE:  === MAIN PROGRAM 1 : item 1 (category 68) ===
+NOTICE:  Applied 10 percent increase to 3 item(s) in category "Dips & Spreads 68"
+NOTICE:  Item: Table Cloth 90x90 White 1 | Category: Dips & Spreads 68 | Price: 118.55 | Prepared 209 time(s) | Avg time: 58.7 | Popularity: High
+```
+
+**אימות במסד הנתונים (pgAdmin):** המחיר של פריט 1 התעדכן ל-`118.55` (העלאה של 10% מ-107.77), והעמודה החדשה `times_prepared` מציגה 209 — הוכחה שהפרוצדורה והשינוי בסכמה אכן נשמרו בבסיס הנתונים.
+
+![הוכחת השינוי במסד הנתונים - מחיר ומונה ההכנות](./Stage%20D/Screenshots/picture_1.png)
+
+### תוכנית ראשית 2 — `main_program_2.sql`
+
+**תיאור:** מזמנת **פרוצדורה אחת + פונקציה אחת**: קודם `sp_archive_old_prep_logs` (תאריך חתך ישן ובטוח), ואז צורכת את ה-**Ref Cursor** המוחזר מ-`fn_get_chef_preparations` ומדפיסה את 5 ההכנות הראשונות של טבח 1.
+
+```sql
+DO $$
+DECLARE v_cursor refcursor; rec RECORD; v_count INTEGER := 0;
+BEGIN
+    RAISE NOTICE '=== MAIN PROGRAM 2 : archive old logs + chef #1 preparations ===';
+    CALL sp_archive_old_prep_logs(DATE '2024-01-01');
+    v_cursor := fn_get_chef_preparations(1);
+    LOOP
+        FETCH v_cursor INTO rec;
+        EXIT WHEN NOT FOUND;
+        v_count := v_count + 1;
+        RAISE NOTICE 'Log %: % | % min | %', rec.log_id, rec.item_name, rec.preparation_time, rec.prep_date;
+        EXIT WHEN v_count >= 5;
+    END LOOP;
+    CLOSE v_cursor;
+    RAISE NOTICE 'Displayed % preparation(s) for chef #1', v_count;
+END; $$;
+```
+
+**הוכחת הרצה:**
+```text
+NOTICE:  === MAIN PROGRAM 2 : archive old logs + chef #1 preparations ===
+NOTICE:  Archived (deleted) 0 preparation log(s) older than 2024-01-01
+NOTICE:  Log 14504: Milk - Condensed 34 | 58 min | 2026-02-27
+NOTICE:  Log 13411: Chinese Foods - Chicken Wing 23 | 38 min | 2026-02-26
+NOTICE:  Log 17259: Sauce - Soya, Light 87 | 6 min | 2026-02-25
+NOTICE:  Log 12822: Sardines 55 | 80 min | 2026-02-25
+NOTICE:  Log 9220: Bread - Bagels, Plain 52 | 97 min | 2026-02-25
+NOTICE:  Displayed 5 preparation(s) for chef #1
+```
+
+---
+
+## 💾 גיבוי - שלב ד'
+
+גיבוי מעודכן של בסיס הנתונים (כולל עמודת `times_prepared`, הפונקציות, הפרוצדורות והטריגרים) נשמר בפורמט `.tar` בשם `backup4`.
+
+```bash
+docker exec PostgreSQL_DB pg_dump -U MyUser -d DB5786David -F t -f /tmp/backup4.tar
+```
+
+![גיבוי 4](./Stage%20D/Screenshots/Backup4.png)
