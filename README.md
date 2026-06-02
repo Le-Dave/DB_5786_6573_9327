@@ -1080,7 +1080,7 @@ ALTER TABLE menu_item ADD CONSTRAINT chk_times_prepared_non_negative CHECK (time
 
 ### פונקציה 1 — `fn_menu_item_kitchen_stats(p_menu_item_id)`
 
-**תיאור:** עבור פריט תפריט נתון, מחזירה "כרטיס" המשלב נתוני תפריט (שם, קטגוריה, מחיר) עם נתוני מטבח (כמה פעמים הוכן, זמן הכנה ממוצע) ותווית פופולריות מחושבת. משתמשת ב-**Record**, ב-**explicit cursor** (DECLARE), ב-**הסתעפות** לקביעת הפופולריות, וזורקת **Exception** אם הפריט אינו קיים.
+**תיאור:** עבור פריט תפריט נתון, מחזירה "כרטיס" המשלב נתוני תפריט (שם, קטגוריה, מחיר) עם נתוני מטבח (כמה פעמים הוכן, זמן הכנה ממוצע) ותווית פופולריות מחושבת. משתמשת ב-**Record**, ב-**implicit cursor** (SELECT INTO), ב-**הסתעפות** לקביעת הפופולריות, וזורקת **Exception** אם הפריט אינו קיים.
 
 ```sql
 CREATE OR REPLACE FUNCTION fn_menu_item_kitchen_stats(p_menu_item_id INTEGER)
