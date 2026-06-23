@@ -28,6 +28,9 @@ class CrudFrame(ctk.CTkFrame):
         self.fk_maps = {}      # col_name -> {id: label}
         self.fk_options = {}   # col_name -> [(id, label)]
         self.row_data = {}     # pk_value -> {col: raw_value}
+        self.all_rows = []     # ordered list of raw row dicts (current fetch)
+        self.sort_col = None   # name of the column we sort by (None = pk order)
+        self.sort_desc = False # False = ascending, True = descending
 
         self._build_ui()
         self._load_fk_lookups()
@@ -47,12 +50,26 @@ class CrudFrame(ctk.CTkFrame):
         ctk.CTkButton(toolbar, text="🗑️ Delete", width=110, fg_color="#a83232",
                       hover_color="#7d2626", command=self.on_delete).pack(side="left", padx=4)
 
+        # ---- sort controls (work for every table) ----
+        self.display_cols = [c for c in self.columns if c["name"] != self.pk]
+        self._sort_label_to_col = {c["label"]: c["name"] for c in self.display_cols}
+        sort_labels = ["(default)"] + [c["label"] for c in self.display_cols]
+
+        ctk.CTkLabel(toolbar, text="Sort by:").pack(side="left", padx=(20, 4))
+        self.sort_combo = ctk.CTkComboBox(toolbar, values=sort_labels, width=170,
+                                          command=self.on_sort_column)
+        self.sort_combo.set("(default)")
+        self.sort_combo.pack(side="left", padx=4)
+        self.sort_dir_btn = ctk.CTkButton(toolbar, text="⇅ Sort", width=110,
+                                          command=self.on_toggle_sort_dir)
+        self.sort_dir_btn.pack(side="left", padx=4)
+
         # Treeview (data grid)
         grid_frame = ctk.CTkFrame(self)
         grid_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         # columns shown = every column except the primary key (id hidden)
-        self.display_cols = [c for c in self.columns if c["name"] != self.pk]
+        # (self.display_cols was set above for the sort controls)
         col_ids = [c["name"] for c in self.display_cols]
 
         style = ttk.Style()
@@ -65,7 +82,8 @@ class CrudFrame(ctk.CTkFrame):
 
         self.tree = ttk.Treeview(grid_frame, columns=col_ids, show="headings", selectmode="browse")
         for c in self.display_cols:
-            self.tree.heading(c["name"], text=c["label"])
+            self.tree.heading(c["name"], text=c["label"],
+                              command=lambda name=c["name"]: self.on_heading_click(name))
             self.tree.column(c["name"], width=140, anchor="w")
 
         vsb = ttk.Scrollbar(grid_frame, orient="vertical", command=self.tree.yview)
@@ -93,9 +111,8 @@ class CrudFrame(ctk.CTkFrame):
 
     # ------------------------------------------------------------ SELECT
     def refresh(self):
-        for iid in self.tree.get_children():
-            self.tree.delete(iid)
         self.row_data.clear()
+        self.all_rows = []
 
         col_names = [c["name"] for c in self.columns]
         query = "SELECT {} FROM {} ORDER BY {}".format(
@@ -108,12 +125,96 @@ class CrudFrame(ctk.CTkFrame):
 
         for row in rows:
             raw = dict(zip(col_names, row))
+            self.row_data[raw[self.pk]] = raw
+            self.all_rows.append(raw)
+
+        self._render()
+
+    # ---------------------------------------------------------- rendering
+    def _render(self):
+        """Populate the grid from self.all_rows, applying the current sort."""
+        for iid in self.tree.get_children():
+            self.tree.delete(iid)
+
+        rows = list(self.all_rows)
+        if self.sort_col is not None:
+            col = next((c for c in self.columns if c["name"] == self.sort_col), None)
+            if col is not None:
+                rows.sort(key=lambda r: self._sort_key(col, r[col["name"]]),
+                          reverse=self.sort_desc)
+
+        for raw in rows:
             pk_val = raw[self.pk]
-            self.row_data[pk_val] = raw
             values = [self._format(c, raw[c["name"]]) for c in self.display_cols]
             self.tree.insert("", "end", iid=str(pk_val), values=values)
 
-        self.status.configure(text=f"{len(rows)} row(s).  (ids are hidden; foreign keys shown as names)")
+        # show a sort arrow on the active column header (plain label on the rest)
+        for c in self.display_cols:
+            text = c["label"]
+            if c["name"] == self.sort_col:
+                text += "  ▼" if self.sort_desc else "  ▲"
+            self.tree.heading(c["name"], text=text)
+
+        note = f"{len(rows)} row(s).  (ids are hidden; foreign keys shown as names)"
+        if self.sort_col is not None:
+            label = next((c["label"] for c in self.display_cols
+                          if c["name"] == self.sort_col), self.sort_col)
+            arrow = "▼ descending" if self.sort_desc else "▲ ascending"
+            note += f"   |   sorted by {label} ({arrow})"
+        self.status.configure(text=note)
+
+    def _sort_key(self, col, value):
+        """Return a comparable key that puts NULLs last and matches what is shown."""
+        if value is None:
+            return (1, "")
+        ctype = col.get("type")
+        if ctype == "fk":
+            # sort by the readable name the user actually sees
+            return (0, self.fk_maps.get(col["name"], {}).get(value, f"#{value}").lower())
+        if ctype in ("int", "numeric"):
+            try:
+                return (0, float(value))
+            except (TypeError, ValueError):
+                return (0, 0.0)
+        if ctype == "bool":
+            return (0, 1 if value else 0)
+        if ctype in ("date", "timestamp"):
+            # date/datetime objects sort natively; fall back to string form
+            return (0, value)
+        return (0, str(value).lower())
+
+    # ------------------------------------------------------------ sorting
+    def on_sort_column(self, label):
+        if label == "(default)":
+            self.sort_col = None
+        else:
+            self.sort_col = self._sort_label_to_col.get(label)
+        self.sort_desc = False
+        self._render()
+
+    def on_toggle_sort_dir(self):
+        # if no column chosen yet, default to the first display column
+        if self.sort_col is None and self.display_cols:
+            self.sort_col = self.display_cols[0]["name"]
+            self.sort_combo.set(self.display_cols[0]["label"])
+            self.sort_desc = False
+        else:
+            self.sort_desc = not self.sort_desc
+        self._render()
+
+    def on_heading_click(self, col_name):
+        """Click a column header to sort by it; click again to reverse."""
+        if self.sort_col == col_name:
+            self.sort_desc = not self.sort_desc
+        else:
+            self.sort_col = col_name
+            self.sort_desc = False
+        # keep the dropdown in sync with the clicked column
+        label = next((c["label"] for c in self.display_cols
+                      if c["name"] == col_name), None)
+        if label is not None:
+            self.sort_combo.set(label)
+        self._render()
 
     def _format(self, col, value):
         if value is None:
